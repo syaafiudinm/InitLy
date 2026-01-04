@@ -59,17 +59,17 @@ class StarterKit extends Model
     |  SCOPES
      ==============*/
 
-    public function scopePublished(Builder $query)
+    public function scopePublished($query)
     {
         return $query->where("status", "published");
     }
 
-    public function scopeFeatured(Builder $query)
+    public function scopeFeatured($query)
     {
         return $query->where("is_featured", true);
     }
 
-    public function scopeDifficulty(Builder $query, string $level)
+    public function scopeDifficulty($query, string $level)
     {
         return $query->where("difficulty", $level);
     }
