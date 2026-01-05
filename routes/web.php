@@ -11,9 +11,9 @@ Route::get("/", function () {
 Route::get("/starter-kit", [StarterKitController::class, "index"]);
 Route::get("/starter-kit/{id}", [StarterKitController::class, "show"]);
 
-Route::middleware(["auth"])
-    ->prefix("admin")
-    ->name("admin.")
-    ->group(function () {
-        Route::resource("starter-kits", Admin / StarterKitController::class);
-    });
+// Route::middleware(["auth"])
+//     ->prefix("admin")
+//     ->name("admin.")
+//     ->group(function () {
+//         Route::resource("starter-kits", Admin / StarterKitController::class);
+//     });

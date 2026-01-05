@@ -31,7 +31,7 @@ class StarterKitController extends Controller
             "difficulty" => "required",
         ]);
 
-        StarterKit::created($data);
+        StarterKit::create($data);
 
         return redirect()
             ->route("admin.starter-kits.index")
@@ -49,7 +49,7 @@ class StarterKitController extends Controller
     {
         $data = $request->validate([
             "name" => "required|string",
-            "slug" => "required|unique:starter_kits",
+            "slug" => "required|unique:starter_kits,slug," . $starterkit->id,
             "short_description" => "required",
             "description" => "required",
             "difficulty" => "required",

@@ -8,15 +8,30 @@ use Inertia\Inertia;
 
 class StarterKitController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $starterKits = StarterKit::published()
-            ->with(["stacks", "latestVersion"])
-            ->orderBy("is_featured", "desc")
-            ->orderBy("created_at", "desc");
+        $query = StarterKit::published()->with(["stacks", "latestVersion"]);
+
+        // Search
+        if ($search = $request->search) {
+            $query
+                ->where("name", "like", "%{$search}%")
+                ->orWhere("short_description", "like", "%{$search}%");
+        }
+
+        // Filter by difficulty
+        if ($difficulty = $request->difficulty) {
+            $query->difficulty($difficulty);
+        }
+
+        // Filter by stack
+        if ($stack = $request->stack) {
+            $query->whereHas("stacks", fn($q) => $q->where("name", $stack));
+        }
 
         return Inertia::render("StarterKits/Index", [
-            "starterKits" => $starterKits->get(),
+            "starterKits" => $query->paginate(12),
+            "filters" => $request->only(["search", "difficulty", "stack"]),
         ]);
     }
 
@@ -24,7 +39,7 @@ class StarterKitController extends Controller
     {
         $starterKit = StarterKit::published()
             ->where("slug", $slug)
-            ->with(["stacks", "latestVersion", "features", "schreenshots"])
+            ->with(["stacks", "latestVersion", "features", "screenshots"])
             ->firstOrFail();
 
         return Inertia::render("StarterKits/Show", [
