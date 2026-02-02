@@ -30,7 +30,7 @@ class StarterKitController extends Controller
         }
 
         return Inertia::render("StarterKits/Index", [
-            "starterKits" => $query->paginate(12),
+            "starterKits" => $query->paginate(5),
             "filters" => $request->only(["search", "difficulty", "stack"]),
         ]);
     }
@@ -39,7 +39,7 @@ class StarterKitController extends Controller
     {
         $starterKit = StarterKit::published()
             ->where("slug", $slug)
-            ->with(["stacks", "latestVersion", "features", "screenshots"])
+            ->with(["stacks", "latestVersion", "features", "screenshots", "steps"])
             ->firstOrFail();
 
         return Inertia::render("StarterKits/Show", [

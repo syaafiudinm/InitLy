@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\StarterKit;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class StarterKitController extends Controller
 {
     /**
@@ -64,7 +64,7 @@ class StarterKitController extends Controller
     {
         $starterKit = StarterKit::published()
             ->where("slug", $slug)
-            ->with(["stacks", "latestVersion", "features", "stats"])
+            ->with(["stacks", "latestVersion", "features", "steps", "stats"])
             ->first();
 
         if (!$starterKit) {
@@ -105,6 +105,16 @@ class StarterKitController extends Controller
                     "install_command" => $latestVersion?->install_command,
                     "release_notes" => $latestVersion?->release_notes,
                 ],
+                "steps" => $starterKit->steps
+                    ->map(
+                        fn($step) => [
+                            "title" => $step->title,
+                            "description" => $step->description,
+                            "command" => $step->command,
+                            "order" => $step->order,
+                        ],
+                    )
+                    ->toArray(),
                 "stats" => [
                     "installs" => $starterKit->stats?->installs_count ?? 0,
                     "last_installed_at" =>
@@ -137,9 +147,7 @@ class StarterKitController extends Controller
                 $starterKit->stats()->updateOrCreate(
                     ["starter_kit_id" => $starterKit->id],
                     [
-                        "installs_count" => DB::raw(
-                            "COALESCE(installs_count, 0) + 1",
-                        ),
+                        "installs_count" => DB::raw("installs_count + 1"),
                         "last_installed_at" => now(),
                     ],
                 );
@@ -147,13 +155,17 @@ class StarterKitController extends Controller
 
             return response()->json([
                 "success" => true,
+                "data" => [
+                    "installs_count" => $starterKit->stats->installs_count,
+                    "last_installed_at" => $starterKit->stats->last_installed_at,
+                ],
                 "message" => "Installation tracked successfully",
             ]);
         } catch (\Exception $e) {
             return response()->json(
                 [
                     "success" => false,
-                    "message" => "Failed to track installation",
+                    "message" => $e->getMessage(),
                 ],
                 500,
             );

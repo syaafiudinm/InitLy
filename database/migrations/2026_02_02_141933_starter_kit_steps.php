@@ -10,15 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create("starter_kit_stacks", function (Blueprint $table) {
+        Schema::create("starter_kit_steps", function (Blueprint $table) {
             $table->id();
             $table
                 ->foreignId("starter_kit_id")
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->string("name");
-            $table->string("version");
-            $table->string("image");
+            $table->string("title");
+            $table->text("description");
+            $table->text("command");
+            $table->integer("order");
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists("starter_kit_stacks");
+        Schema::dropIfExists("starter_kit_steps");
     }
 };

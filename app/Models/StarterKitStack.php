@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StarterKitStack extends Model
 {
-    protected $fillable = ["starter_kit_id", "name", "version"];
+    protected $fillable = ["starter_kit_id", "name", "version", "image"];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\StarterKit, \App\Models\StarterKitStack>

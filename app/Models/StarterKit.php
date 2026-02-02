@@ -55,6 +55,11 @@ class StarterKit extends Model
         return $this->hasOne(StarterKitStat::class);
     }
 
+    public function steps()
+    {
+        return $this->hasMany(StarterKitStep::class);
+    }
+
     /* =============
     |  SCOPES
      ==============*/

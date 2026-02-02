@@ -25,7 +25,8 @@ class StarterKitSeeder extends Seeder
                 ],
                 "version" => [
                     "version" => "1.0.0",
-                    "repo_url" => "https://github.com/syaafiudinm/InitLy.git",
+                    "repo_url" =>
+                        "https://github.com/syaafiudinm/inertia-starter-kit.git",
                     "branch" => "main",
                     "install_type" => "git",
                     "install_command" => "composer install && npm install",
@@ -34,135 +35,75 @@ class StarterKitSeeder extends Seeder
                     "is_latest" => true,
                 ],
                 "stacks" => [
-                    ["name" => "Laravel", "version" => "11.x"],
-                    ["name" => "Vue", "version" => "3.x"],
-                    ["name" => "Inertia.js", "version" => "1.x"],
-                    ["name" => "Tailwind CSS", "version" => "3.x"],
+                    [
+                        "name" => "Laravel",
+                        "version" => "11.x",
+                        "image" => "laravel/laravel",
+                    ],
+                    [
+                        "name" => "React",
+                        "version" => "18.x",
+                        "image" => "React/react",
+                    ],
+                    [
+                        "name" => "Inertia.js",
+                        "version" => "1.x",
+                        "image" => "inertiajs/inertia",
+                    ],
+                    [
+                        "name" => "Tailwind CSS",
+                        "version" => "4.x",
+                        "image" => "tailwindcss/tailwindcss",
+                    ],
+                    [
+                        "name" => "TypeScript",
+                        "version" => "4.x",
+                        "image" => "typescript/typescript",
+                    ],
                 ],
                 "features" => [
-                    "Authentication (Login, Register, Password Reset)",
-                    "User Dashboard",
+                    "Exclude Authentication",
                     "Tailwind CSS styling",
-                    "Hot Module Replacement (HMR)",
                     "TypeScript support",
                     "ESLint & Prettier configured",
                 ],
-            ],
-            [
-                "kit" => [
-                    "name" => "MERN Stack",
-                    "slug" => "mern-stack",
-                    "short_description" =>
-                        "MongoDB, Express, React, and Node.js starter",
-                    "description" =>
-                        "Full MERN stack boilerplate dengan React, Redux Toolkit, MongoDB, Express.js, dan JWT authentication. Perfect untuk membangun REST API dan modern web apps.",
-                    "difficulty" => "intermediate",
-                    "setup_time_minutes" => 15,
-                    "is_featured" => true,
-                    "status" => "published",
-                ],
-                "version" => [
-                    "version" => "2.1.0",
-                    "repo_url" => "https://github.com/example/mern-starter.git",
-                    "branch" => "main",
-                    "install_type" => "git",
-                    "install_command" =>
-                        "npm install && cd client && npm install",
-                    "releases_notes" => "Updated to React 18 and Redux Toolkit",
-                    "is_latest" => true,
-                ],
-                "stacks" => [
-                    ["name" => "MongoDB", "version" => "7.x"],
-                    ["name" => "Express", "version" => "4.x"],
-                    ["name" => "React", "version" => "18.x"],
-                    ["name" => "Node.js", "version" => "20.x"],
-                    ["name" => "Redux Toolkit", "version" => "2.x"],
-                ],
-                "features" => [
-                    "JWT Authentication",
-                    "Redux state management",
-                    "REST API structure",
-                    "MongoDB with Mongoose",
-                    "Environment variables setup",
-                    "Error handling middleware",
-                ],
-            ],
-            [
-                "kit" => [
-                    "name" => "Next.js + Prisma",
-                    "slug" => "nextjs-prisma",
-                    "short_description" =>
-                        "Next.js 14 with Prisma ORM and PostgreSQL",
-                    "description" =>
-                        "Modern Next.js starter dengan App Router, Prisma ORM, PostgreSQL, NextAuth.js, dan Tailwind CSS. Support Server Components dan API Routes.",
-                    "difficulty" => "beginner",
-                    "setup_time_minutes" => 8,
-                    "is_featured" => false,
-                    "status" => "published",
-                ],
-                "version" => [
-                    "version" => "1.5.0",
-                    "repo_url" =>
-                        "https://github.com/example/nextjs-prisma.git",
-                    "branch" => "main",
-                    "install_type" => "git",
-                    "install_command" => "npm install && npx prisma generate",
-                    "releases_notes" => "Added Next.js 14 App Router support",
-                    "is_latest" => true,
-                ],
-                "stacks" => [
-                    ["name" => "Next.js", "version" => "14.x"],
-                    ["name" => "Prisma", "version" => "5.x"],
-                    ["name" => "PostgreSQL", "version" => "16.x"],
-                    ["name" => "NextAuth.js", "version" => "4.x"],
-                    ["name" => "Tailwind CSS", "version" => "3.x"],
-                ],
-                "features" => [
-                    "App Router (Next.js 14)",
-                    "Server Components",
-                    "Prisma ORM setup",
-                    "Authentication with NextAuth",
-                    "TypeScript configured",
-                    "API Routes examples",
-                ],
-            ],
-            [
-                "kit" => [
-                    "name" => "Django REST API",
-                    "slug" => "django-rest",
-                    "short_description" => "Django with Django REST Framework",
-                    "description" =>
-                        "Production-ready Django REST API boilerplate dengan JWT auth, PostgreSQL, Celery untuk async tasks, dan comprehensive testing setup.",
-                    "difficulty" => "advanced",
-                    "setup_time_minutes" => 20,
-                    "is_featured" => false,
-                    "status" => "published",
-                ],
-                "version" => [
-                    "version" => "3.0.0",
-                    "repo_url" =>
-                        "https://github.com/example/django-rest-starter.git",
-                    "branch" => "main",
-                    "install_type" => "git",
-                    "install_command" =>
-                        "pip install -r requirements.txt && python manage.py migrate",
-                    "releases_notes" => "Major update with Django 5.0",
-                    "is_latest" => true,
-                ],
-                "stacks" => [
-                    ["name" => "Django", "version" => "5.0"],
-                    ["name" => "Django REST Framework", "version" => "3.14"],
-                    ["name" => "PostgreSQL", "version" => "16.x"],
-                    ["name" => "Celery", "version" => "5.3"],
-                    ["name" => "Redis", "version" => "7.x"],
-                ],
-                "features" => [
-                    "JWT Authentication",
-                    "Django REST Framework",
-                    "Celery async tasks",
-                    "Redis caching",
-                    "Swagger API documentation",
-                    "Unit & integration tests",
+                "steps" => [
+                    [
+                        "title" => "Clone Repository",
+                        "description" =>
+                            "Clone the starter kit repository to your local machine",
+                        "command" =>
+                            "git clone https://github.com/syaafiudinm/InitLy.git my-project",
+                        "order" => 1,
+                    ],
+                    [
+                        "title" => "Install Dependencies",
+                        "description" =>
+                            "Install PHP and JavaScript dependencies",
+                        "command" => "composer install && npm install",
+                        "order" => 2,
+                    ],
+                    [
+                        "title" => "Environment Setup",
+                        "description" =>
+                            "Copy environment file and generate application key",
+                        "command" =>
+                            "cp .env.example .env && php artisan key:generate",
+                        "order" => 3,
+                    ],
+                    [
+                        "title" => "Database Setup",
+                        "description" => "Create database and run migrations",
+                        "command" => "php artisan migrate",
+                        "order" => 4,
+                    ],
+                    [
+                        "title" => "Start Development Server",
+                        "description" =>
+                            "Run Laravel development server and Vite",
+                        "command" => "php artisan serve & npm run dev",
+                        "order" => 5,
+                    ],
                 ],
             ],
         ];
@@ -181,6 +122,13 @@ class StarterKitSeeder extends Seeder
             // Create features
             foreach ($data["features"] as $feature) {
                 $kit->features()->create(["name" => $feature]);
+            }
+
+            // Create steps
+            if (isset($data["steps"])) {
+                foreach ($data["steps"] as $step) {
+                    $kit->steps()->create($step);
+                }
             }
 
             // Initialize stats
