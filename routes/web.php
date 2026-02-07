@@ -6,21 +6,28 @@ use App\Http\Controllers\Admin\StarterKitController as AdminStarterKitController
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+//ini di halaman home
 Route::get("/", function () {
     return Inertia::render("Home");
 });
 
+//ini yang ko implementasikan kemarin
 Route::get("/starter-kit", [StarterKitController::class, "index"]);
 Route::get("/starter-kit/{slug}", [StarterKitController::class, "show"]);
 
+// ini rute untuk login, jadi kalau sudah login, tidak bisai masuk ke halaman login
 Route::middleware("guests")->group(function () {
-    Route::get("login", [AuthController::class, "loginPage"]);
-    Route::post("login", [AuthController::class, "login"]);
+    Route::get("/login", [AuthController::class, "loginPage"]);
+    Route::post("/login", [AuthController::class, "login"]);
 });
-Route::post("logout", [AuthController::class, "logout"])
+
+//ini untuk logout, saya protect pakai middleware "auth"
+Route::post("/logout", [AuthController::class, "logout"])
     ->middleware("auth")
     ->name("logout");
 
+// ini rute starterkit untuk admin ekal, saya pakekan prefix dan sudah ku protect sama middleware "auth",
+// template nama rutenya itu admin.starter-kits.index
 Route::middleware(["auth"])
     ->prefix("admin")
     ->name("admin.")

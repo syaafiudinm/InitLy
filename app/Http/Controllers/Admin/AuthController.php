@@ -9,14 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    //ini method untuk pakai halaman login
     public function loginPage()
     {
-        return Inertia::render("Admin/Auth/Login", [
-            "title" => "Login",
-            "description" => "Login to your account",
-        ]);
+        return Inertia::render("Admin/Auth/Login"]);
     }
 
+    //ini method loginnya, pakai remember me karena dari laravel nya ada mmgmi tabel sama modelnya jadi malaska custom
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -37,6 +36,7 @@ class AuthController extends Controller
             ->onlyInput("email");
     }
 
+    //logout method (hapus session, regenerate token)
     public function logout(Request $request)
     {
         Auth::logout();
