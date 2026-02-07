@@ -157,7 +157,8 @@ class StarterKitController extends Controller
                 "success" => true,
                 "data" => [
                     "installs_count" => $starterKit->stats->installs_count,
-                    "last_installed_at" => $starterKit->stats->last_installed_at,
+                    "last_installed_at" =>
+                        $starterKit->stats->last_installed_at,
                 ],
                 "message" => "Installation tracked successfully",
             ]);
