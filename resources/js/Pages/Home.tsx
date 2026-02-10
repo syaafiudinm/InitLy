@@ -1,51 +1,58 @@
+import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 
 export default function Home() {
     return (
-        <>
+        <MainLayout>
             <Head title="Home" />
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-                <div className="text-center">
-                    <div className="mb-8">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-800 rounded-full mb-6">
-                            <svg
-                                className="w-8 h-8 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                                />
-                            </svg>
-                        </div>
+            <section className="bg-white text-slate-900">
+                <div className="mx-auto max-w-6xl px-6 py-20">
+                    {/* Header */}
+                    <div className="py-20 text-center">
+                        <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+                            We invest in the world's potential
+                        </h1>
+
+                        <p className="mx-auto mb-10 max-w-2xl text-lg text-slate-600">
+                            Here at Flowbite we focus on markets where
+                            technology, innovation, and capital can unlock
+                            long-term value and drive economic growth.
+                        </p>
+
+                        <Link
+                            href="/starter-kits"
+                            className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3 text-base font-medium text-white shadow hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-300"
+                        >
+                            Getting Started
+                        </Link>
                     </div>
 
-                    <h1 className="text-4xl font-light text-gray-900 mb-3 tracking-tight">
-                        Laravel + React Starterkit
-                    </h1>
+                    {/* Tech Stack */}
+                    <div className="mb-10 flex items-center justify-center gap-8 text-sm text-slate-500">
+                        <TechItem label="Laravel 12" />
+                        <TechItem label="React 18" />
+                        <TechItem label="Inertia.js" />
+                    </div>
 
-                    <p className="text-gray-500 text-sm mb-8">by syaafiudinm</p>
-
-                    <div className="flex items-center justify-center gap-6 text-sm text-gray-400">
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
-                            <span>Laravel 12</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
-                            <span>React 18</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
-                            <span>Inertia.js</span>
-                        </div>
+                    {/* Footer Text */}
+                    <div className="text-center">
+                        <h2 className="mb-2 text-lg font-light tracking-tight text-slate-900">
+                            This App Build With Laravel Inertia React StarterKit
+                        </h2>
+                        <p className="text-sm text-slate-500">By InitLy</p>
                     </div>
                 </div>
-            </div>
-        </>
+            </section>
+        </MainLayout>
+    );
+}
+
+function TechItem({ label }: { label: string }) {
+    return (
+        <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-slate-800" />
+            <span>{label}</span>
+        </div>
     );
 }
