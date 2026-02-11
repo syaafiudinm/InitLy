@@ -12,8 +12,8 @@ class StarterKitSeeder extends Seeder
         $kits = [
             [
                 "kit" => [
-                    "name" => "Laravel + Inertia.js",
-                    "slug" => "laravel-inertia",
+                    "name" => "Laravel + React",
+                    "slug" => "laravel-react",
                     "short_description" =>
                         "Modern full-stack Laravel with Vue 3 and Inertia.js",
                     "description" =>

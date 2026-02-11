@@ -11,6 +11,8 @@ Route::get("/", function () {
     return Inertia::render("Home");
 });
 
+Route::get("/starter-kits", [StarterKitController::class, "index"]);
+Route::get("/starter-kit/{id}", [StarterKitController::class, "show"]);
 //ini yang ko implementasikan kemarin
 Route::get("/starter-kit", [StarterKitController::class, "index"]);
 Route::get("/starter-kit/{slug}", [StarterKitController::class, "show"]);

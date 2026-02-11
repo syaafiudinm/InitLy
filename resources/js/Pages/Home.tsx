@@ -1,9 +1,10 @@
+import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
 
 export default function Home() {
     return (
-        <>
+        <MainLayout>
             <Head title="Home" />
             <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
                 <div className="text-center">
@@ -53,7 +54,16 @@ export default function Home() {
 
                     <p className="text-gray-500 text-sm mb-8">By InitLy</p>
                 </div>
-            </div>
-        </>
+            </section>
+        </MainLayout>
+    );
+}
+
+function TechItem({ label }: { label: string }) {
+    return (
+        <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-slate-800" />
+            <span>{label}</span>
+        </div>
     );
 }
