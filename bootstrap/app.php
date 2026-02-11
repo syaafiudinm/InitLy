@@ -15,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(
             append: [\App\Http\Middleware\HandleInertiaRequests::class],
         );
+
+        $middleware->redirectTo("/admin/starter-kits/");
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
