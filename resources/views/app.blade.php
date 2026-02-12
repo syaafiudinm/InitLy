@@ -8,8 +8,12 @@
         <!-- Favicon -->
         <link rel="icon" type="image/svg+xml" href="/initly.svg">
 
-        @viteReactRefresh
+        @if(app()->environment('local'))
+            @viteReactRefresh
+        @endif
+
         @vite(['resources/css/app.css', 'resources/js/app.tsx'])
+
         @inertiaHead
     </head>
     <body class="antialiased">
