@@ -25,12 +25,8 @@ export default function Index({ starterKits }: IndexProps) {
                         Getting Started
                     </h1>
                     <p className="max-w-2xl text-lg text-slate-600">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Nemo, porro officiis similique sunt a quod deserunt
-                        excepturi cum harum vitae!
-                        <br />
-                        <br />A collection of clean, production-ready starter
-                        kits for modern full-stack web development.
+                        A collection of clean, development-ready starter kits
+                        for modern full-stack web development.
                     </p>
                 </div>
 
@@ -56,13 +52,6 @@ function Card({ kit }: CardProps) {
             href={`/starter-kit/${kit.slug}`}
             className="group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-6 transition hover:bg-slate-50"
         >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300">
-                <img
-                    src="https://www.neuronworks.co.id/wp-content/uploads/2024/11/laravel-logowine-677e34f3ed94c-scaled.webp"
-                    alt="Logo"
-                />
-            </div>
-
             <div>
                 <h3 className="font-semibold">
                     {kit.name}

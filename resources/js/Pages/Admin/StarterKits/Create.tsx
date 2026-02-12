@@ -56,6 +56,8 @@ export default function Create() {
         command: "",
     });
 
+    const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
     // Generate slug from name
     const generateSlug = (name: string) => {
         return name
@@ -67,9 +69,14 @@ export default function Create() {
 
     const handleNameChange = (name: string) => {
         setData("name", name);
-        if (!data.slug) {
+        if (!slugManuallyEdited && name) {
             setData("slug", generateSlug(name));
         }
+    };
+
+    const handleSlugChange = (slug: string) => {
+        setData("slug", slug);
+        setSlugManuallyEdited(true);
     };
 
     const addStack = () => {
@@ -119,7 +126,8 @@ export default function Create() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post("/admin/create/starter-kit");
+
+        post("/admin/starter-kits");
     };
 
     return (
@@ -182,8 +190,9 @@ export default function Create() {
                                         type="text"
                                         className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
                                         value={data.slug}
-                                        onChange={(e) =>
-                                            setData("slug", e.target.value)
+                                        onChange={
+                                            (e) =>
+                                                handleSlugChange(e.target.value) // ✅ FIX: Handle manual slug edit
                                         }
                                         placeholder="laravel-react-starter-kit"
                                     />
@@ -193,53 +202,53 @@ export default function Create() {
                                         </p>
                                     )}
                                 </div>
-                            </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Short Description *
-                                </label>
-                                <input
-                                    type="text"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.short_description}
-                                    onChange={(e) =>
-                                        setData(
-                                            "short_description",
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="A modern Laravel application with React frontend"
-                                    maxLength={255}
-                                />
-                                {errors.short_description && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.short_description}
-                                    </p>
-                                )}
-                            </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Short Description *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.short_description}
+                                        onChange={(e) =>
+                                            setData(
+                                                "short_description",
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="A modern Laravel + React starter kit with authentication"
+                                    />
+                                    {errors.short_description && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.short_description}
+                                        </p>
+                                    )}
+                                </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Description *
-                                </label>
-                                <textarea
-                                    rows={4}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.description}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                    placeholder="Detailed description of your starter kit..."
-                                />
-                                {errors.description && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.description}
-                                    </p>
-                                )}
-                            </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Description *
+                                    </label>
+                                    <textarea
+                                        rows={4}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.description}
+                                        onChange={(e) =>
+                                            setData(
+                                                "description",
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="Detailed description of your starter kit..."
+                                    />
+                                    {errors.description && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.description}
+                                        </p>
+                                    )}
+                                </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Difficulty *
@@ -250,7 +259,10 @@ export default function Create() {
                                         onChange={(e) =>
                                             setData(
                                                 "difficulty",
-                                                e.target.value as any,
+                                                e.target.value as
+                                                    | "beginner"
+                                                    | "intermediate"
+                                                    | "advanced",
                                             )
                                         }
                                     >
@@ -278,10 +290,29 @@ export default function Create() {
                                         onChange={(e) =>
                                             setData(
                                                 "setup_time_minutes",
-                                                parseInt(e.target.value),
+                                                parseInt(e.target.value) || 1,
                                             )
                                         }
                                     />
+                                </div>
+
+                                <div className="flex items-center space-x-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="rounded border-gray-300 text-gray-700 shadow-sm focus:border-gray-700 focus:ring focus:ring-gray-200 focus:ring-opacity-50"
+                                            checked={data.is_featured}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "is_featured",
+                                                    e.target.checked,
+                                                )
+                                            }
+                                        />
+                                        <span className="ml-2 text-sm text-gray-700">
+                                            Featured
+                                        </span>
+                                    </label>
                                 </div>
 
                                 <div>
@@ -294,7 +325,9 @@ export default function Create() {
                                         onChange={(e) =>
                                             setData(
                                                 "status",
-                                                e.target.value as any,
+                                                e.target.value as
+                                                    | "draft"
+                                                    | "published",
                                             )
                                         }
                                     >
@@ -304,25 +337,6 @@ export default function Create() {
                                         </option>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div className="mt-6">
-                                <label className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="h-4 w-4 text-gray-700 focus:ring-gray-700 border-gray-300 rounded"
-                                        checked={data.is_featured}
-                                        onChange={(e) =>
-                                            setData(
-                                                "is_featured",
-                                                e.target.checked,
-                                            )
-                                        }
-                                    />
-                                    <span className="ml-2 text-sm text-gray-700">
-                                        Featured starter kit
-                                    </span>
-                                </label>
                             </div>
                         </div>
 
@@ -346,58 +360,39 @@ export default function Create() {
                                         }
                                         placeholder="1.0.0"
                                     />
+                                    {errors.version && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.version}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Install Type *
+                                        Repository URL *
                                     </label>
-                                    <select
+                                    <input
+                                        type="url"
                                         className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                        value={data.version_install_type}
+                                        value={data.version_repo_url}
                                         onChange={(e) =>
                                             setData(
-                                                "version_install_type",
-                                                e.target.value as any,
+                                                "version_repo_url",
+                                                e.target.value,
                                             )
                                         }
-                                    >
-                                        <option value="git">Git Clone</option>
-                                        <option value="npm">NPM Package</option>
-                                        <option value="composer">
-                                            Composer Package
-                                        </option>
-                                    </select>
+                                        placeholder="https://github.com/username/repo"
+                                    />
+                                    {errors.version_repo_url && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.version_repo_url}
+                                        </p>
+                                    )}
                                 </div>
-                            </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Repository URL *
-                                </label>
-                                <input
-                                    type="url"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.version_repo_url}
-                                    onChange={(e) =>
-                                        setData(
-                                            "version_repo_url",
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="https://github.com/username/repo"
-                                />
-                                {errors.version_repo_url && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.version_repo_url}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Repository Branch
+                                        Branch
                                     </label>
                                     <input
                                         type="text"
@@ -415,6 +410,31 @@ export default function Create() {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Install Type *
+                                    </label>
+                                    <select
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.version_install_type}
+                                        onChange={(e) =>
+                                            setData(
+                                                "version_install_type",
+                                                e.target.value as
+                                                    | "git"
+                                                    | "npm"
+                                                    | "composer",
+                                            )
+                                        }
+                                    >
+                                        <option value="git">Git</option>
+                                        <option value="npm">NPM</option>
+                                        <option value="composer">
+                                            Composer
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Install Command
                                     </label>
                                     <input
@@ -427,27 +447,27 @@ export default function Create() {
                                                 e.target.value,
                                             )
                                         }
-                                        placeholder="composer install"
+                                        placeholder="git clone [repo-url]"
                                     />
                                 </div>
-                            </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Release Notes
-                                </label>
-                                <textarea
-                                    rows={3}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.version_release_notes}
-                                    onChange={(e) =>
-                                        setData(
-                                            "version_release_notes",
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="What's new in this version..."
-                                />
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Release Notes
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.version_release_notes}
+                                        onChange={(e) =>
+                                            setData(
+                                                "version_release_notes",
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="What's new in this version..."
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -457,11 +477,11 @@ export default function Create() {
                                 Tech Stack
                             </h2>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div className="flex gap-4 mb-4">
                                 <input
                                     type="text"
-                                    className="px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    placeholder="Technology name (e.g. Laravel)"
+                                    className="flex-1 px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                    placeholder="Technology name (e.g. React)"
                                     value={newStack.name}
                                     onChange={(e) =>
                                         setNewStack({
@@ -472,8 +492,8 @@ export default function Create() {
                                 />
                                 <input
                                     type="text"
-                                    className="px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    placeholder="Version (e.g. 10.x)"
+                                    className="w-32 px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                    placeholder="Version"
                                     value={newStack.version}
                                     onChange={(e) =>
                                         setNewStack({
@@ -485,7 +505,7 @@ export default function Create() {
                                 <button
                                     type="button"
                                     onClick={addStack}
-                                    className="bg-gray-700 text-white px-4 py-3 rounded-md hover:bg-gray-800 transition-colors"
+                                    className="bg-gray-700 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors"
                                 >
                                     Add Stack
                                 </button>

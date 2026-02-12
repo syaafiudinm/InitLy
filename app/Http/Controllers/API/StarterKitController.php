@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\StarterKit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 class StarterKitController extends Controller
 {
     /**
@@ -43,7 +44,14 @@ class StarterKitController extends Controller
                 "description" => $kit->short_description,
                 "difficulty" => $kit->difficulty,
                 "setup_time_minutes" => $kit->setup_time_minutes,
-                "stacks" => $kit->stacks->pluck("name")->toArray(),
+                "stacks" => $kit->stacks
+                    ->map(
+                        fn($s) => [
+                            "name" => $s->name,
+                            "version" => $s->version,
+                        ],
+                    )
+                    ->toArray(),
                 "version" => $kit->latestVersion?->version,
                 "installs" => $kit->stats?->installs_count ?? 0,
                 "is_featured" => $kit->is_featured,
@@ -98,7 +106,7 @@ class StarterKitController extends Controller
                     ->toArray(),
                 "features" => $starterKit->features->pluck("name")->toArray(),
                 "version" => [
-                    "number" => $latestVersion?->version,
+                    "version" => $latestVersion?->version,
                     "repo_url" => $latestVersion?->repo_url,
                     "branch" => $latestVersion?->branch ?? "main",
                     "install_type" => $latestVersion?->install_type,
@@ -106,6 +114,7 @@ class StarterKitController extends Controller
                     "release_notes" => $latestVersion?->release_notes,
                 ],
                 "steps" => $starterKit->steps
+                    ->sortBy("order")
                     ->map(
                         fn($step) => [
                             "title" => $step->title,
@@ -114,6 +123,7 @@ class StarterKitController extends Controller
                             "order" => $step->order,
                         ],
                     )
+                    ->values()
                     ->toArray(),
                 "stats" => [
                     "installs" => $starterKit->stats?->installs_count ?? 0,
@@ -153,6 +163,9 @@ class StarterKitController extends Controller
                 );
             });
 
+            // Refresh to get updated count
+            $starterKit->refresh();
+
             return response()->json([
                 "success" => true,
                 "data" => [
@@ -166,7 +179,8 @@ class StarterKitController extends Controller
             return response()->json(
                 [
                     "success" => false,
-                    "message" => $e->getMessage(),
+                    "message" =>
+                        "Failed to track installation: " . $e->getMessage(),
                 ],
                 500,
             );

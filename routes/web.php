@@ -31,11 +31,11 @@ Route::post("/logout", [AuthController::class, "logout"])
     ->name("logout");
 
 // FIX: Redirect authenticated users yang akses /admin ke /admin/starter-kits
-Route::middleware(["auth"])->group(function () {
-    Route::get("/admin", function () {
-        return redirect()->route("admin.starter-kits.index");
-    })->name("admin.dashboard");
-});
+// Route::middleware(["auth"])->group(function () {
+//     Route::get("/admin/", function () {
+//         return redirect()->route("admin.starter-kits.index");
+//     })->name("admin.");
+// });
 
 // FIX: Admin routes dengan nama yang konsisten
 Route::middleware(["auth"])

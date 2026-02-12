@@ -124,7 +124,7 @@ class StarterKitController extends Controller
             DB::commit();
 
             return redirect()
-                ->route("admin.index")
+                ->route("admin.starter-kits.index")
                 ->with("success", "Starter Kit Created Successfully");
         } catch (\Exception $e) {
             DB::rollBack();

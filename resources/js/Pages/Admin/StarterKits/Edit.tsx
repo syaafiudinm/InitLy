@@ -1,6 +1,23 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { FormEventHandler, useState } from "react";
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent,
+} from "@dnd-kit/core";
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface StarterKit {
     id: number;
@@ -55,6 +72,97 @@ interface FormData {
     }>;
 }
 
+// Sortable Step Component
+function SortableStep({
+    step,
+    index,
+    onRemove,
+}: {
+    step: FormData["steps"][0];
+    index: number;
+    onRemove: (index: number) => void;
+}) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: `step-${index}` });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+    };
+
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            className="bg-gray-50 p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+        >
+            <div className="flex items-start justify-between">
+                <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                        {/* Drag Handle */}
+                        <button
+                            type="button"
+                            className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 p-1 rounded hover:bg-gray-200 transition-colors"
+                            {...attributes}
+                            {...listeners}
+                            title="Drag to reorder"
+                        >
+                            <svg
+                                className="w-4 h-4"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path d="M7 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM7 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM7 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM13 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM13 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM13 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
+                            </svg>
+                        </button>
+                        <span className="bg-gray-700 text-white text-xs px-2 py-1 rounded">
+                            {step.order}
+                        </span>
+                        <h4 className="font-medium text-gray-700">
+                            {step.title}
+                        </h4>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">
+                        {step.description}
+                    </p>
+                    {step.command && (
+                        <code className="text-xs bg-gray-200 px-2 py-1 rounded block mt-2 break-all">
+                            {step.command}
+                        </code>
+                    )}
+                </div>
+                <button
+                    type="button"
+                    onClick={() => onRemove(index)}
+                    className="text-gray-500 hover:text-red-600 ml-4 p-1 rounded hover:bg-red-50 transition-colors"
+                    title="Remove step"
+                >
+                    <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    );
+}
+
 interface Props {
     starterKit: StarterKit;
 }
@@ -89,6 +197,20 @@ export default function Edit({ starterKit }: Props) {
         command: "",
     });
 
+    const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
+    // Drag and Drop sensors
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        }),
+    );
+
     // Generate slug from name
     const generateSlug = (name: string) => {
         return name
@@ -100,7 +222,14 @@ export default function Edit({ starterKit }: Props) {
 
     const handleNameChange = (name: string) => {
         setData("name", name);
-        setData("slug", generateSlug(name));
+        if (!slugManuallyEdited) {
+            setData("slug", generateSlug(name));
+        }
+    };
+
+    const handleSlugChange = (slug: string) => {
+        setData("slug", slug);
+        setSlugManuallyEdited(true);
     };
 
     const addStack = () => {
@@ -148,9 +277,32 @@ export default function Edit({ starterKit }: Props) {
         setData("steps", updatedSteps);
     };
 
+    // Handle drag end for steps reordering
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+
+        if (over && active.id !== over.id) {
+            const oldIndex = data.steps.findIndex(
+                (_, i) => `step-${i}` === active.id,
+            );
+            const newIndex = data.steps.findIndex(
+                (_, i) => `step-${i}` === over.id,
+            );
+
+            const reorderedSteps = arrayMove(data.steps, oldIndex, newIndex);
+
+            // Update order numbers
+            const updatedSteps = reorderedSteps.map((step, index) => ({
+                ...step,
+                order: index + 1,
+            }));
+
+            setData("steps", updatedSteps);
+        }
+    };
+
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        console.log("Submitting data:", data); // Debug di browser console
 
         put(`/admin/starter-kits/${starterKit.slug}`);
     };
@@ -216,7 +368,7 @@ export default function Edit({ starterKit }: Props) {
                                         className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
                                         value={data.slug}
                                         onChange={(e) =>
-                                            setData("slug", e.target.value)
+                                            handleSlugChange(e.target.value)
                                         }
                                         placeholder="laravel-react-starter-kit"
                                     />
@@ -226,53 +378,53 @@ export default function Edit({ starterKit }: Props) {
                                         </p>
                                     )}
                                 </div>
-                            </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Short Description *
-                                </label>
-                                <input
-                                    type="text"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.short_description}
-                                    onChange={(e) =>
-                                        setData(
-                                            "short_description",
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="A modern Laravel application with React frontend"
-                                    maxLength={255}
-                                />
-                                {errors.short_description && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.short_description}
-                                    </p>
-                                )}
-                            </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Short Description *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.short_description}
+                                        onChange={(e) =>
+                                            setData(
+                                                "short_description",
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="A modern Laravel + React starter kit with authentication"
+                                    />
+                                    {errors.short_description && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.short_description}
+                                        </p>
+                                    )}
+                                </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Description *
-                                </label>
-                                <textarea
-                                    rows={4}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.description}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                    placeholder="Detailed description of your starter kit..."
-                                />
-                                {errors.description && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.description}
-                                    </p>
-                                )}
-                            </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Description *
+                                    </label>
+                                    <textarea
+                                        rows={4}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.description}
+                                        onChange={(e) =>
+                                            setData(
+                                                "description",
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="Detailed description of your starter kit..."
+                                    />
+                                    {errors.description && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.description}
+                                        </p>
+                                    )}
+                                </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Difficulty *
@@ -283,7 +435,10 @@ export default function Edit({ starterKit }: Props) {
                                         onChange={(e) =>
                                             setData(
                                                 "difficulty",
-                                                e.target.value as any,
+                                                e.target.value as
+                                                    | "beginner"
+                                                    | "intermediate"
+                                                    | "advanced",
                                             )
                                         }
                                     >
@@ -311,10 +466,29 @@ export default function Edit({ starterKit }: Props) {
                                         onChange={(e) =>
                                             setData(
                                                 "setup_time_minutes",
-                                                parseInt(e.target.value),
+                                                parseInt(e.target.value) || 1,
                                             )
                                         }
                                     />
+                                </div>
+
+                                <div className="flex items-center space-x-4">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            className="rounded border-gray-300 text-gray-700 shadow-sm focus:border-gray-700 focus:ring focus:ring-gray-200 focus:ring-opacity-50"
+                                            checked={data.is_featured}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "is_featured",
+                                                    e.target.checked,
+                                                )
+                                            }
+                                        />
+                                        <span className="ml-2 text-sm text-gray-700">
+                                            Featured
+                                        </span>
+                                    </label>
                                 </div>
 
                                 <div>
@@ -327,7 +501,9 @@ export default function Edit({ starterKit }: Props) {
                                         onChange={(e) =>
                                             setData(
                                                 "status",
-                                                e.target.value as any,
+                                                e.target.value as
+                                                    | "draft"
+                                                    | "published",
                                             )
                                         }
                                     >
@@ -337,25 +513,6 @@ export default function Edit({ starterKit }: Props) {
                                         </option>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div className="mt-6">
-                                <label className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="h-4 w-4 text-gray-700 focus:ring-gray-700 border-gray-300 rounded"
-                                        checked={data.is_featured}
-                                        onChange={(e) =>
-                                            setData(
-                                                "is_featured",
-                                                e.target.checked,
-                                            )
-                                        }
-                                    />
-                                    <span className="ml-2 text-sm text-gray-700">
-                                        Featured starter kit
-                                    </span>
-                                </label>
                             </div>
                         </div>
 
@@ -379,58 +536,39 @@ export default function Edit({ starterKit }: Props) {
                                         }
                                         placeholder="1.0.0"
                                     />
+                                    {errors.version && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.version}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Install Type *
+                                        Repository URL *
                                     </label>
-                                    <select
+                                    <input
+                                        type="url"
                                         className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                        value={data.version_install_type}
+                                        value={data.version_repo_url}
                                         onChange={(e) =>
                                             setData(
-                                                "version_install_type",
-                                                e.target.value as any,
+                                                "version_repo_url",
+                                                e.target.value,
                                             )
                                         }
-                                    >
-                                        <option value="git">Git Clone</option>
-                                        <option value="npm">NPM Package</option>
-                                        <option value="composer">
-                                            Composer Package
-                                        </option>
-                                    </select>
+                                        placeholder="https://github.com/username/repo"
+                                    />
+                                    {errors.version_repo_url && (
+                                        <p className="mt-1 text-sm text-red-600">
+                                            {errors.version_repo_url}
+                                        </p>
+                                    )}
                                 </div>
-                            </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Repository URL *
-                                </label>
-                                <input
-                                    type="url"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.version_repo_url}
-                                    onChange={(e) =>
-                                        setData(
-                                            "version_repo_url",
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="https://github.com/username/repo"
-                                />
-                                {errors.version_repo_url && (
-                                    <p className="mt-1 text-sm text-red-600">
-                                        {errors.version_repo_url}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Repository Branch
+                                        Branch
                                     </label>
                                     <input
                                         type="text"
@@ -448,6 +586,31 @@ export default function Edit({ starterKit }: Props) {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Install Type *
+                                    </label>
+                                    <select
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.version_install_type}
+                                        onChange={(e) =>
+                                            setData(
+                                                "version_install_type",
+                                                e.target.value as
+                                                    | "git"
+                                                    | "npm"
+                                                    | "composer",
+                                            )
+                                        }
+                                    >
+                                        <option value="git">Git</option>
+                                        <option value="npm">NPM</option>
+                                        <option value="composer">
+                                            Composer
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Install Command
                                     </label>
                                     <input
@@ -460,27 +623,27 @@ export default function Edit({ starterKit }: Props) {
                                                 e.target.value,
                                             )
                                         }
-                                        placeholder="composer install"
+                                        placeholder="npm install && composer install"
                                     />
                                 </div>
-                            </div>
 
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Release Notes
-                                </label>
-                                <textarea
-                                    rows={3}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    value={data.version_release_notes}
-                                    onChange={(e) =>
-                                        setData(
-                                            "version_release_notes",
-                                            e.target.value,
-                                        )
-                                    }
-                                    placeholder="What's new in this version..."
-                                />
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Release Notes
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                        value={data.version_release_notes}
+                                        onChange={(e) =>
+                                            setData(
+                                                "version_release_notes",
+                                                e.target.value,
+                                            )
+                                        }
+                                        placeholder="What's new in this version..."
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -490,11 +653,11 @@ export default function Edit({ starterKit }: Props) {
                                 Tech Stack
                             </h2>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div className="flex gap-4 mb-4">
                                 <input
                                     type="text"
-                                    className="px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    placeholder="Technology name (e.g. Laravel)"
+                                    className="flex-1 px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                    placeholder="Technology name (e.g. React)"
                                     value={newStack.name}
                                     onChange={(e) =>
                                         setNewStack({
@@ -505,8 +668,8 @@ export default function Edit({ starterKit }: Props) {
                                 />
                                 <input
                                     type="text"
-                                    className="px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
-                                    placeholder="Version (e.g. 10.x)"
+                                    className="w-32 px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
+                                    placeholder="Version"
                                     value={newStack.version}
                                     onChange={(e) =>
                                         setNewStack({
@@ -518,7 +681,7 @@ export default function Edit({ starterKit }: Props) {
                                 <button
                                     type="button"
                                     onClick={addStack}
-                                    className="bg-gray-700 text-white px-4 py-3 rounded-md hover:bg-gray-800 transition-colors"
+                                    className="bg-gray-700 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors"
                                 >
                                     Add Stack
                                 </button>
@@ -591,13 +754,17 @@ export default function Edit({ starterKit }: Props) {
                             </div>
                         </div>
 
-                        {/* Installation Steps */}
+                        {/* Installation Steps with Drag & Drop */}
                         <div className="bg-white rounded-lg border border-gray-100 p-6 shadow-sm">
                             <h2 className="text-lg font-semibold text-gray-700 mb-4">
                                 Installation Steps
+                                <span className="text-sm text-gray-500 ml-2">
+                                    (Drag to reorder)
+                                </span>
                             </h2>
 
-                            <div className="space-y-4 mb-4">
+                            {/* Add New Step Form */}
+                            <div className="space-y-4 mb-6 p-4 bg-gray-50 rounded-lg">
                                 <input
                                     type="text"
                                     className="w-full px-4 py-3 border border-gray-200 rounded-md focus:ring-2 focus:ring-gray-700 focus:border-transparent outline-none"
@@ -643,44 +810,38 @@ export default function Edit({ starterKit }: Props) {
                                 </button>
                             </div>
 
+                            {/* Sortable Steps List */}
                             <div className="space-y-3">
-                                {data.steps.map((step, index) => (
-                                    <div
-                                        key={index}
-                                        className="bg-gray-50 p-4 rounded-lg"
+                                <DndContext
+                                    sensors={sensors}
+                                    collisionDetection={closestCenter}
+                                    onDragEnd={handleDragEnd}
+                                >
+                                    <SortableContext
+                                        items={data.steps.map(
+                                            (_, i) => `step-${i}`,
+                                        )}
+                                        strategy={verticalListSortingStrategy}
                                     >
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="bg-gray-700 text-white text-xs px-2 py-1 rounded">
-                                                        {step.order}
-                                                    </span>
-                                                    <h4 className="font-medium text-gray-700">
-                                                        {step.title}
-                                                    </h4>
-                                                </div>
-                                                <p className="text-sm text-gray-600 mb-2">
-                                                    {step.description}
-                                                </p>
-                                                {step.command && (
-                                                    <code className="text-xs bg-gray-200 px-2 py-1 rounded">
-                                                        {step.command}
-                                                    </code>
-                                                )}
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    removeStep(index)
-                                                }
-                                                className="text-gray-500 hover:text-red-600 ml-4"
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
+                                        {data.steps.map((step, index) => (
+                                            <SortableStep
+                                                key={`step-${index}`}
+                                                step={step}
+                                                index={index}
+                                                onRemove={removeStep}
+                                            />
+                                        ))}
+                                    </SortableContext>
+                                </DndContext>
                             </div>
+
+                            {/* Empty State */}
+                            {data.steps.length === 0 && (
+                                <div className="text-center py-8 text-gray-500">
+                                    No steps added yet. Add your first
+                                    installation step above.
+                                </div>
+                            )}
                         </div>
 
                         {/* Submit Buttons */}

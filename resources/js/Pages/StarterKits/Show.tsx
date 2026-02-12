@@ -1,4 +1,5 @@
 import MainLayout from "@/Layouts/MainLayout";
+import { ArrowLeft, Copy, Check } from "lucide-react";
 import { Head } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { highlightCommand } from "@/Lib/Shiki";
@@ -47,25 +48,84 @@ export default function Show({ starterKit }: { starterKit: StarterKit }) {
     return (
         <MainLayout>
             <Head title="Laravel Inertia" />
-            <section className="mx-auto max-w-6xl bg-white px-6 py-16 text-slate-900">
+            <section className="mx-auto max-w-6xl bg-gray-50 px-6 py-16 text-slate-900">
                 {/* Header */}
-                <div className="mb-16">
-                    <h1 className="mb-4 text-4xl font-bold tracking-tight">
-                        Install {starterKit.name}
-                    </h1>
-                    <p className="max-w-2xl text-lg text-slate-600">
-                        {starterKit.description}
-                    </p>
+                <div className="flex">
+                    <div className="mb-16">
+                        <h1 className="mb-4 text-3xl font-bold tracking-tight">
+                            Install {starterKit.name}
+                        </h1>
+                        <p className="max-w-xl text-lg text-slate-600">
+                            {starterKit.description}
+                        </p>
+                    </div>
+                    <div className="ml-auto">
+                        <a
+                            href="/starter-kit"
+                            className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium"
+                        >
+                            <ArrowLeft className="h-6 w-6 mr-2 mt-1" />
+                            Back
+                        </a>
+                    </div>
                 </div>
 
                 {/* Steps */}
-                <div className="space-y-20">
+                <div className="space-y-10">
                     {starterKit.steps.map((step) => (
                         <Step key={step.order} step={step} />
                     ))}
                 </div>
             </section>
         </MainLayout>
+    );
+}
+
+function CopyButton({ text }: { text: string }) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error("Failed to copy:", err);
+            // Fallback for older browsers
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand("copy");
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            } catch (fallbackErr) {
+                console.error("Fallback copy failed:", fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+    };
+
+    return (
+        <button
+            onClick={handleCopy}
+            className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors text-xs rounded border border-slate-700"
+            title="Copy to clipboard"
+        >
+            {copied ? (
+                <>
+                    <Check className="h-3 w-3" />
+                    <span>Copied!</span>
+                </>
+            ) : (
+                <>
+                    <Copy className="h-3 w-3" />
+                    <span>Copy</span>
+                </>
+            )}
+        </button>
     );
 }
 
@@ -92,16 +152,18 @@ function Step({ step }: { step: Step }) {
                     {step.order}
                 </div>
                 <div>
-                    <h3 className="mb-3 text-xl font-semibold">{step.title}</h3>
-                    <p className="max-w-md text-slate-600">
+                    <h3 className="mb-3 text-lg font-semibold">{step.title}</h3>
+                    <p className="max-w-md text-sm text-slate-600">
                         {step.description}
                     </p>
                 </div>
             </div>
 
-            {/* Code Block */}
+            {/* Code Block with Copy Button - ENHANCED */}
             <div className="relative min-w-0 rounded-xl bg-slate-900 p-6 text-sm shadow-lg">
                 <div className="mb-3 text-xs text-slate-400">Terminal</div>
+
+                <CopyButton text={step.command} />
 
                 {html ? (
                     <div
@@ -109,7 +171,7 @@ function Step({ step }: { step: Step }) {
                         dangerouslySetInnerHTML={{ __html: html }}
                     />
                 ) : (
-                    <pre className="text-slate-400">Loading...</pre>
+                    <pre className="text-slate-400 text-sm">Loading...</pre>
                 )}
             </div>
         </div>

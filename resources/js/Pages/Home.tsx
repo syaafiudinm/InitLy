@@ -1,69 +1,122 @@
 import MainLayout from "@/Layouts/MainLayout";
-import { Head } from "@inertiajs/react";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 
 export default function Home() {
     return (
         <MainLayout>
-            <Head title="Home" />
-            <section className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-                <div className="text-center">
-                    <div className="mb-8">
-                        <div className="w-[900px]">
-                            <section className="">
-                                <div className="py-8 px-4 mx-auto max-w-screen-2xl text-center lg:py-16">
-                                    <h1 className="mb-6 text-4xl font-semibold tracking-tighter text-heading md:text-5xl lg:text-6xl text-gray-700">
-                                        We invest in the world’s potential
-                                    </h1>
-                                    <p className="mb-8 font-light md:text-xl text-gray-700">
-                                        Here at Flowbite we focus on markets
-                                        where technology, innovation, and
-                                        capital can unlock long-term value and
-                                        drive economic growth.
-                                    </p>
-                                    <div className="space-y-4 sm:flex-row sm:justify-center sm:space-y-0 md:space-x-4">
-                                        <Link
-                                            href="/starter-kit"
-                                            className="inline-flex items-center justify-center bg-gray-700 text-white rounded-sm box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium rounded-base text-base px-5 py-3 focus:outline-none"
-                                        >
-                                            Getting started
-                                        </Link>
-                                    </div>
-                                </div>
-                            </section>
+            <Head title="InitLy - Quick Starter Kit Installer" />
+
+            {/* Hero Section */}
+            <section className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto text-center">
+                    {/* Main Content */}
+                    <div className="mb-8 sm:mb-12 lg:mb-16">
+                        <h1 className="mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-800">
+                            Welcome to{" "}
+                            <span className="bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
+                                InitLy
+                            </span>
+                        </h1>
+
+                        <p className="mb-6 sm:mb-8 text-base sm:text-lg md:text-xl font-light text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
+                            Skip the boilerplate and jumpstart your project with
+                            production-ready starter kits. Build faster, ship
+                            sooner.
+                        </p>
+
+                        {/* CTA Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4">
+                            <Link
+                                href="/starter-kit"
+                                className="w-full sm:w-auto inline-flex items-center justify-center bg-gray-800 hover:bg-gray-900 text-white font-medium px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                            >
+                                <span className="mr-2">🚀</span>
+                                Explore Starter Kits
+                            </Link>
+
+                            <div className="flex items-center text-sm text-gray-500">
+                                <span className="hidden sm:inline">
+                                    or run:
+                                </span>
+                                <code className="ml-2 px-3 py-1 bg-gray-200 rounded text-gray-800 font-mono text-xs sm:text-sm">
+                                    npx create-initly
+                                </code>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-6 text-sm text-gray-400">
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
-                            <span>Laravel 12</span>
+                    {/* CLI Command Showcase */}
+                    <div className="bg-gray-900 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 text-left max-w-2xl mx-auto">
+                        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                            <div className="flex gap-1.5">
+                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
+                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></div>
+                                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
+                            </div>
+                            <span className="text-gray-400 text-xs sm:text-sm ml-2">
+                                Terminal
+                            </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
-                            <span>React 18</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
-                            <span>Inertia.js</span>
+                        <div className="font-mono text-xs sm:text-sm">
+                            <div className="text-gray-400 mb-1 sm:mb-2">
+                                $ npx create-initly laravel-react
+                            </div>
+                            <div className="text-green-400 mb-1">
+                                ✓ Fetching starter kit...
+                            </div>
+                            <div className="text-green-400 mb-1">
+                                ✓ Cloning repository...
+                            </div>
+                            <div className="text-green-400 mb-1">
+                                ✓ Installing dependencies...
+                            </div>
+                            <div className="text-yellow-400 mb-2 sm:mb-3">
+                                🎉 Ready to code!
+                            </div>
+                            <div className="text-gray-400">
+                                <span className="text-blue-400">cd</span>{" "}
+                                laravel-react-starter &&
+                                <span className="text-blue-400 ml-1">
+                                    npm run dev
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <h1 className="text-lg font-light text-gray-900 mt-8 tracking-tight">
-                        This App Build With Laravel Inertia React StarterKit
-                    </h1>
-
-                    <p className="text-gray-500 text-sm mb-8">By InitLy</p>
                 </div>
             </section>
         </MainLayout>
     );
 }
 
-function TechItem({ label }: { label: string }) {
+// Tech Badge Component
+function TechBadge({ label }: { label: string }) {
     return (
-        <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-slate-800" />
-            <span>{label}</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm border border-gray-200 text-sm text-gray-700">
+            <div className="w-2 h-2 bg-gray-700 rounded-full"></div>
+            <span className="font-medium">{label}</span>
+        </div>
+    );
+}
+
+// Feature Card Component
+function FeatureCard({
+    icon,
+    title,
+    description,
+}: {
+    icon: string;
+    title: string;
+    description: string;
+}) {
+    return (
+        <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+            <div className="text-2xl sm:text-3xl mb-3 sm:mb-4">{icon}</div>
+            <h3 className="font-semibold text-gray-800 mb-2 text-base sm:text-lg">
+                {title}
+            </h3>
+            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                {description}
+            </p>
         </div>
     );
 }
