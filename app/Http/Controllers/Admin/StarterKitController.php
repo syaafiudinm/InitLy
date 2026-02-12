@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use App\Models\StarterKit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,8 +13,9 @@ class StarterKitController extends Controller
 {
     public function index()
     {
+        $starterKits = StarterKit::with("latestVersion")->get();
         return Inertia::render("Admin/StarterKits/Index", [
-            "starterKits" => StarterKit::latest()->get(),
+            "starterKits" => $starterKits,
         ]);
     }
 
@@ -34,7 +36,7 @@ class StarterKitController extends Controller
             "is_featured" => "required|boolean",
             "status" => "required|in:draft,published",
 
-            // Version
+            // Version fields - sesuai migration yang diperbaiki
             "version" => "required|string|max:255",
             "version_repo_url" => "required|url",
             "version_repo_branch" => "nullable|string",
@@ -42,16 +44,16 @@ class StarterKitController extends Controller
             "version_install_command" => "nullable|string",
             "version_release_notes" => "nullable|string",
 
-            // Stacks (array)
+            // Stacks - version dan image nullable
             "stacks" => "nullable|array",
             "stacks.*.name" => "required|string",
             "stacks.*.version" => "nullable|string",
 
-            // Features (array of strings)
+            // Features
             "features" => "nullable|array",
             "features.*" => "required|string",
 
-            // Steps (array)
+            // Steps - command nullable
             "steps" => "nullable|array",
             "steps.*.title" => "required|string",
             "steps.*.description" => "required|string",
@@ -73,10 +75,11 @@ class StarterKitController extends Controller
                 "status" => $validated["status"],
             ]);
 
+            // Create version dengan field yang benar
             $starterKit->versions()->create([
                 "version" => $validated["version"],
                 "repo_url" => $validated["version_repo_url"],
-                "repo_branch" => $validated["version_repo_branch"],
+                "branch" => $validated["version_repo_branch"] ?? "main",
                 "install_type" => $validated["version_install_type"],
                 "install_command" => $validated["version_install_command"],
                 "release_notes" => $validated["version_release_notes"],
@@ -87,7 +90,8 @@ class StarterKitController extends Controller
                 foreach ($validated["stacks"] as $stack) {
                     $starterKit->stacks()->create([
                         "name" => $stack["name"],
-                        "version" => $stack["version"] ?? null,
+                        "version" => $stack["version"],
+                        "image" => null,
                     ]);
                 }
             }
@@ -103,9 +107,9 @@ class StarterKitController extends Controller
             if (!empty($validated["steps"])) {
                 foreach ($validated["steps"] as $step) {
                     $starterKit->steps()->create([
-                        "title" => $step["name"],
+                        "title" => $step["title"],
                         "description" => $step["description"],
-                        "command" => $step["command"] ?? null,
+                        "command" => $step["command"],
                         "order" => $step["order"],
                     ]);
                 }
@@ -120,36 +124,45 @@ class StarterKitController extends Controller
             DB::commit();
 
             return redirect()
-                ->route("admin.starter-kit.index")
+                ->route("admin.index")
                 ->with("success", "Starter Kit Created Successfully");
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error("Failed to create starter kit: " . $e->getMessage(), [
+                "validated_data" => $validated,
+                "trace" => $e->getTraceAsString(),
+            ]);
 
             return redirect()
                 ->back()
-                ->withInput([
+                ->withInput()
+                ->withErrors([
                     "error" =>
-                        "failed to create starter kit" . $e->getMessage(),
+                        "Failed to create starter kit: " . $e->getMessage(),
                 ]);
         }
     }
 
-    public function edit(StarterKit $starterKit)
+    public function edit($slug)
     {
-        $starterKit->load([
-            "latest_version",
-            "stacks",
-            "features",
-            "steps" => fn($query) => $query->orderBy("order"),
-        ]);
+        $starterKit = StarterKit::where("slug", $slug)
+            ->with([
+                "latestVersion",
+                "stacks",
+                "features",
+                "steps" => fn($query) => $query->orderBy("order"),
+            ])
+            ->firstOrFail();
 
         return Inertia::render("Admin/StarterKits/Edit", [
             "starterKit" => $starterKit,
         ]);
     }
 
-    public function update(Request $request, StarterKit $starterkit)
+    public function update(Request $request, $slug)
     {
+        $starterkit = StarterKit::where("slug", $slug)->firstOrFail();
+
         $validated = $request->validate([
             "name" => "required|string",
             "slug" =>
@@ -160,7 +173,7 @@ class StarterKitController extends Controller
             "description" => "required|string",
             "difficulty" => "required|in:beginner,intermediate,advanced",
             "setup_time_minutes" => "required|integer|min:1",
-            "is_featured" => "required|boolean",
+            "is_featured" => "boolean",
             "status" => "required|in:draft,published",
 
             // Version
@@ -171,16 +184,16 @@ class StarterKitController extends Controller
             "version_install_command" => "nullable|string",
             "version_release_notes" => "nullable|string",
 
-            // Stacks (array)
+            // Stacks
             "stacks" => "nullable|array",
             "stacks.*.name" => "required|string",
             "stacks.*.version" => "nullable|string",
 
-            // Features (array of strings)
+            // Features
             "features" => "nullable|array",
             "features.*" => "required|string",
 
-            // Steps (array)
+            // Steps
             "steps" => "nullable|array",
             "steps.*.title" => "required|string",
             "steps.*.description" => "required|string",
@@ -191,63 +204,87 @@ class StarterKitController extends Controller
         try {
             DB::beginTransaction();
 
-            $starterKit = StarterKit::update([
+            // Update starter kit
+            $starterkit->update([
                 "name" => $validated["name"],
                 "slug" => $validated["slug"],
                 "short_description" => $validated["short_description"],
                 "description" => $validated["description"],
                 "difficulty" => $validated["difficulty"],
-                "setup_time_minutes" =>
-                    $validated["setup_time_minutes"] ?? null,
+                "setup_time_minutes" => $validated["setup_time_minutes"],
                 "is_featured" => $validated["is_featured"] ?? false,
                 "status" => $validated["status"],
             ]);
 
-            $starterKit->versions()->update([
-                "version" => $validated["version"],
-                "repo_url" => $validated["version_repo_url"],
-                "repo_branch" => $validated["version_repo_branch"],
-                "install_type" => $validated["version_install_type"],
-                "install_command" =>
-                    $validated["version_install_command"] ?? null,
-                "release_notes" => $validated["version_release_notes"] ?? null,
-            ]);
+            // Update latest version
+            if ($starterkit->latestVersion) {
+                $starterkit->latestVersion->update([
+                    "version" => $validated["version"],
+                    "repo_url" => $validated["version_repo_url"],
+                    "branch" => $validated["version_repo_branch"] ?? "main",
+                    "install_type" => $validated["version_install_type"],
+                    "install_command" => $validated["version_install_command"],
+                    "release_notes" => $validated["version_release_notes"],
+                ]);
+            } else {
+                // Create new version if doesn't exist
+                $starterkit->versions()->create([
+                    "version" => $validated["version"],
+                    "repo_url" => $validated["version_repo_url"],
+                    "branch" => $validated["version_repo_branch"] ?? "main",
+                    "install_type" => $validated["version_install_type"],
+                    "install_command" => $validated["version_install_command"],
+                    "release_notes" => $validated["version_release_notes"],
+                    "is_latest" => true,
+                ]);
+            }
 
+            // Update stacks
+            $starterkit->stacks()->delete();
             if (!empty($validated["stacks"])) {
                 foreach ($validated["stacks"] as $stack) {
-                    $starterKit->stacks()->update([
+                    $starterkit->stacks()->create([
                         "name" => $stack["name"],
                         "version" => $stack["version"] ?? null,
+                        "image" => null, // Field nullable
                     ]);
                 }
             }
 
-            $starterKit->stacks()->delete();
-            if (!empty($validated["stacks"])) {
-                $starterKit->stacks()->createMany($validated["stacks"]);
-            }
-
-            // Replace features
-            $starterKit->features()->delete();
+            // Update features
+            $starterkit->features()->delete();
             if (!empty($validated["features"])) {
                 foreach ($validated["features"] as $feature) {
-                    $starterKit->features()->create(["name" => $feature]);
+                    $starterkit->features()->create(["name" => $feature]);
                 }
             }
 
-            // Replace steps
-            $starterKit->steps()->delete();
+            // Update steps
+            $starterkit->steps()->delete();
             if (!empty($validated["steps"])) {
-                $starterKit->steps()->createMany($validated["steps"]);
+                foreach ($validated["steps"] as $step) {
+                    $starterkit->steps()->create([
+                        "title" => $step["title"],
+                        "description" => $step["description"],
+                        "command" => $step["command"] ?? null, // Nullable
+                        "order" => $step["order"],
+                    ]);
+                }
             }
 
             DB::commit();
 
             return redirect()
                 ->route("admin.starter-kits.index")
-                ->with("success", "starterkit berhasil di update");
+                ->with("success", "Starter kit berhasil diupdate");
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error("Failed to update starter kit: " . $e->getMessage(), [
+                "starter_kit_id" => $starterkit->id,
+                "slug" => $slug,
+                "validated_data" => $validated,
+                "trace" => $e->getTraceAsString(),
+            ]);
 
             return back()
                 ->withInput()
@@ -258,10 +295,19 @@ class StarterKitController extends Controller
         }
     }
 
-    public function destroy(StarterKit $starterkit)
+    public function destroy($slug)
     {
-        $starterkit->delete();
+        try {
+            $starterkit = StarterKit::where("slug", $slug)->firstOrFail();
+            $starterkit->delete();
 
-        return back()->with("success", "Delete Starter Kit Successfully");
+            return back()->with("success", "Delete Starter Kit Successfully");
+        } catch (\Exception $e) {
+            Log::error("Failed to delete starter kit: " . $e->getMessage());
+
+            return back()->withErrors([
+                "error" => "Failed to delete starter kit: " . $e->getMessage(),
+            ]);
+        }
     }
 }

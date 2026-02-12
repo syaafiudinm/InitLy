@@ -18,7 +18,7 @@ return new class extends Migration {
                 ->cascadeOnDelete();
             $table->string("title");
             $table->text("description");
-            $table->text("command");
+            $table->text("command")->nullable();
             $table->integer("order");
             $table->timestamps();
         });

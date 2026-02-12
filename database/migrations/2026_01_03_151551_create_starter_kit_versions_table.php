@@ -19,9 +19,9 @@ return new class extends Migration {
             $table->string("version");
             $table->string("repo_url");
             $table->string("branch")->default("main");
-            $table->enum("install_type", ["npx", "git", "npm"]);
-            $table->string("install_command");
-            $table->text("releases_notes")->nullable();
+            $table->enum("install_type", ["git", "npm", "composer"]);
+            $table->string("install_command")->nullable();
+            $table->text("release_notes")->nullable();
             $table->boolean("is_latest")->default(false);
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists("starter_kits_versisons");
+        Schema::dropIfExists("starter_kits_versions");
     }
 };

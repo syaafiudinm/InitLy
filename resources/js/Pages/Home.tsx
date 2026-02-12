@@ -6,7 +6,7 @@ export default function Home() {
     return (
         <MainLayout>
             <Head title="Home" />
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+            <section className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
                 <div className="text-center">
                     <div className="mb-8">
                         <div className="w-[900px]">

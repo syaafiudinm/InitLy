@@ -12,7 +12,10 @@ class AuthController extends Controller
     //ini method untuk pakai halaman login
     public function loginPage()
     {
-        return Inertia::render("Admin/Auth/Login"]);
+        if (Auth::check()) {
+            return redirect()->route("admin.starter-kits.index");
+        }
+        return Inertia::render("Admin/Auth/Login");
     }
 
     //ini method loginnya, pakai remember me karena dari laravel nya ada mmgmi tabel sama modelnya jadi malaska custom
@@ -26,7 +29,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean("remember"))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route("Admin/Dashboard"));
+            return redirect()->intended(route("admin.starter-kits.index"));
         }
 
         return back()
@@ -45,6 +48,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route("Admin/Login");
+        return redirect()->route("login");
     }
 }

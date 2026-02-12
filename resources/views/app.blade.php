@@ -6,7 +6,7 @@
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Favicon -->
-        <link rel="icon" type="image/svg+xml" href="/laravel.svg">
+        <link rel="icon" type="image/svg+xml" href="/initly.svg">
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx'])

@@ -17,7 +17,7 @@ class StarterKitSeeder extends Seeder
                     "short_description" =>
                         "Modern full-stack Laravel with Vue 3 and Inertia.js",
                     "description" =>
-                        "Complete starter kit dengan Laravel 11, Vue 3, Inertia.js, dan Tailwind CSS. Sudah include authentication, routing, dan best practices untuk membangun SPA modern.",
+                        "Complete starter kit dengan Laravel 11, React 3, Inertia.js, dan Tailwind CSS. Sudah include authentication, routing, dan best practices untuk membangun SPA modern.",
                     "difficulty" => "intermediate",
                     "setup_time_minutes" => 10,
                     "is_featured" => true,
@@ -30,7 +30,7 @@ class StarterKitSeeder extends Seeder
                     "branch" => "main",
                     "install_type" => "git",
                     "install_command" => "composer install && npm install",
-                    "releases_notes" =>
+                    "release_notes" =>
                         "Initial release with Laravel 11 and Inertia.js",
                     "is_latest" => true,
                 ],
