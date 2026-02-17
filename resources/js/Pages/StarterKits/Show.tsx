@@ -48,7 +48,7 @@ export default function Show({ starterKit }: { starterKit: StarterKit }) {
     return (
         <MainLayout>
             <Head title="Laravel Inertia" />
-            <section className="mx-auto max-w-6xl bg-gray-50 px-6 py-16 text-slate-900">
+            <section className="mx-auto max-w-6xl px-6 py-16 text-slate-900">
                 {/* Header */}
                 <div className="flex">
                     <div className="mb-16">

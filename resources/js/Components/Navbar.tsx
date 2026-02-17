@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link } from "@inertiajs/react";
+import { PageProps } from "@/types";
+import { usePage } from "@inertiajs/react";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
+    const { auth } = usePage<PageProps>().props;
 
     return (
-        <header className="sticky top-0 z-50 border-b border-slate-200 bg-white">
+        <header className="sticky top-0 z-50 border-b border-slate-200 bg-gray-50">
             <nav className="mx-auto max-w-6xl px-6">
                 <div className="flex h-16 items-center justify-between">
                     {/* LOGO */}
@@ -21,12 +24,33 @@ export default function Navbar() {
                         >
                             Home
                         </Link>
-                        <Link
-                            href="/login"
-                            className="text-sm text-slate-600 transition hover:text-slate-900"
-                        >
-                            Login
-                        </Link>
+                        {auth.user ? (
+                            <>
+                                <div className="">
+                                    <Link
+                                        href="/logout"
+                                        method="post"
+                                        as="button"
+                                        className="text-sm text-slate-600 transition hover:text-slate-900"
+                                    >
+                                        Logout
+                                    </Link>
+                                </div>
+                                |
+                                <span className="text-gray-700 text-sm">
+                                    Halo, {auth.user.name} 👋
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    href="/login"
+                                    className="text-sm text-slate-600"
+                                >
+                                    Login
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                     {/* MOBILE BUTTON */}

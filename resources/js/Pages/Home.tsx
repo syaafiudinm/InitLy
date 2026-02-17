@@ -7,7 +7,7 @@ export default function Home() {
             <Head title="InitLy - Quick Starter Kit Installer" />
 
             {/* Hero Section */}
-            <section className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+            <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
                     {/* Main Content */}
                     <div className="mb-8 sm:mb-12 lg:mb-16">
@@ -85,38 +85,5 @@ export default function Home() {
                 </div>
             </section>
         </MainLayout>
-    );
-}
-
-// Tech Badge Component
-function TechBadge({ label }: { label: string }) {
-    return (
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full shadow-sm border border-gray-200 text-sm text-gray-700">
-            <div className="w-2 h-2 bg-gray-700 rounded-full"></div>
-            <span className="font-medium">{label}</span>
-        </div>
-    );
-}
-
-// Feature Card Component
-function FeatureCard({
-    icon,
-    title,
-    description,
-}: {
-    icon: string;
-    title: string;
-    description: string;
-}) {
-    return (
-        <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-            <div className="text-2xl sm:text-3xl mb-3 sm:mb-4">{icon}</div>
-            <h3 className="font-semibold text-gray-800 mb-2 text-base sm:text-lg">
-                {title}
-            </h3>
-            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                {description}
-            </p>
-        </div>
     );
 }
