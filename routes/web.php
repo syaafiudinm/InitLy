@@ -2,46 +2,59 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\StarterKitController;
+use App\Http\Controllers\SavedStarterKitController;
 use App\Http\Controllers\Admin\StarterKitController as AdminStarterKitController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-//ini di halaman home
+// Halaman Home
 Route::get("/", function () {
     return Inertia::render("Home");
-});
+})->name("home");
 
-// Route::get("/starter-kits", [StarterKitController::class, "index"]);
-// Route::get("/starter-kit/{id}", [StarterKitController::class, "show"]);
-//ini yang ko implementasikan kemarin
+// Public starter kit routes
 Route::get("/starter-kit", [StarterKitController::class, "index"]);
 Route::get("/starter-kit/{slug}", [StarterKitController::class, "show"]);
 
-// ini rute untuk login, jadi kalau sudah login, tidak bisa masuk ke halaman login
+// Guest routes (login & register) — hanya bisa diakses kalau belum login
 Route::middleware("guest")->group(function () {
     Route::get("/login", [AuthController::class, "loginPage"])->name("login");
     Route::post("/login", [AuthController::class, "login"])->name(
         "login.store",
     );
+
+    Route::get("/register", [AuthController::class, "registerPage"])->name(
+        "register",
+    );
+    Route::post("/register", [AuthController::class, "register"])->name(
+        "register.store",
+    );
 });
 
-//ini untuk logout, saya protect pakai middleware "auth"
+// Logout
 Route::post("/logout", [AuthController::class, "logout"])
     ->middleware("auth")
     ->name("logout");
 
-// FIX: Redirect authenticated users yang akses /admin ke /admin/starter-kits
-// Route::middleware(["auth"])->group(function () {
-//     Route::get("/admin/", function () {
-//         return redirect()->route("admin.starter-kits.index");
-//     })->name("admin.");
-// });
+// Authenticated user routes (semua role)
+Route::middleware(["auth"])->group(function () {
+    // Toggle save/unsave starter kit
+    Route::post("/starter-kit/{slug}/save", [
+        SavedStarterKitController::class,
+        "toggle",
+    ])->name("starter-kit.save.toggle");
 
-// FIX: Admin routes dengan nama yang konsisten
-Route::middleware(["auth"])
+    // Halaman saved kits
+    Route::get("/saved-kits", [
+        SavedStarterKitController::class,
+        "index",
+    ])->name("saved-kits.index");
+});
+
+// Admin routes — hanya role admin
+Route::middleware(["auth", "role:admin"])
     ->prefix("admin")
     ->group(function () {
-        // FIX: Starter kits routes dengan nama yang jelas
         Route::get("/starter-kits", [
             AdminStarterKitController::class,
             "index",

@@ -25,9 +25,18 @@ class HandleInertiaRequests extends Middleware
                         "id" => $request->user()->id,
                         "name" => $request->user()->name,
                         "email" => $request->user()->email,
+                        "role" => $request->user()->role,
                     ]
                     : null,
             ],
+            // Share saved kit IDs agar bisa dipakai di Index & Show untuk status saved
+            "savedKitIds" => $request->user()
+                ? $request
+                    ->user()
+                    ->savedStarterKits()
+                    ->pluck("starter_kit_id")
+                    ->toArray()
+                : [],
         ];
     }
 }

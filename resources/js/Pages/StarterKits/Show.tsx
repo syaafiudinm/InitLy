@@ -1,10 +1,11 @@
 import MainLayout from "@/Layouts/MainLayout";
-import { ArrowLeft, Copy, Check } from "lucide-react";
-import { Head } from "@inertiajs/react";
+import { ArrowLeft, Copy, Check, Bookmark } from "lucide-react";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { highlightCommand } from "@/Lib/Shiki";
 
 type StarterKit = {
+    id: number;
     name: string;
     slug: string;
     description: string;
@@ -13,9 +14,10 @@ type StarterKit = {
     setup_time_minutes: number;
     stacks: Stack[];
     features: string[];
-    version: Version;
+    version: Version | null;
     steps: Step[];
-    stats: Stats;
+    stats: Stats | null;
+    is_saved: boolean;
 };
 
 type Stack = {
@@ -45,26 +47,80 @@ type Stats = {
 };
 
 export default function Show({ starterKit }: { starterKit: StarterKit }) {
+    const { auth } = usePage<{ auth: { user: any } }>().props;
+    const [saving, setSaving] = useState(false);
+
+    const handleSave = () => {
+        if (!auth.user) {
+            router.visit("/login");
+            return;
+        }
+
+        setSaving(true);
+        router.post(
+            `/starter-kit/${starterKit.slug}/save`,
+            {},
+            {
+                preserveScroll: true,
+                onFinish: () => setSaving(false),
+            },
+        );
+    };
+
     return (
         <MainLayout>
-            <Head title="Laravel Inertia" />
+            <Head title={`Install ${starterKit.name}`} />
             <section className="mx-auto max-w-6xl px-6 py-16 text-slate-900">
                 {/* Header */}
-                <div className="flex">
-                    <div className="mb-16">
-                        <h1 className="mb-4 text-3xl font-bold tracking-tight">
-                            Install {starterKit.name}
-                        </h1>
+                <div className="flex items-start justify-between mb-16">
+                    <div>
+                        <div className="flex items-center gap-3 mb-4">
+                            <h1 className="text-3xl font-bold tracking-tight">
+                                Install {starterKit.name}
+                            </h1>
+                            {starterKit.version && (
+                                <span className="text-sm text-gray-400 bg-gray-100 px-2 py-1 rounded-md">
+                                    v{starterKit.version.number}
+                                </span>
+                            )}
+                        </div>
                         <p className="max-w-xl text-lg text-slate-600">
                             {starterKit.description}
                         </p>
                     </div>
-                    <div className="ml-auto">
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={handleSave}
+                            disabled={saving}
+                            className={`
+                                inline-flex items-center gap-2
+                                border border-gray-800
+                                text-sm font-medium
+                                px-4 py-2.5
+                                rounded-lg
+                                shadow-[2px_2px_0px] shadow-gray-800
+                                transition-all duration-200
+                                hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none
+                                active:translate-x-0 active:translate-y-0 active:shadow-[2px_2px_0px] active:shadow-gray-800
+                                disabled:opacity-50
+                                ${starterKit.is_saved ? "bg-gray-800 text-white" : "bg-white text-gray-800"}
+                            `}
+                        >
+                            <Bookmark
+                                className="h-4 w-4"
+                                fill={
+                                    starterKit.is_saved
+                                        ? "currentColor"
+                                        : "none"
+                                }
+                            />
+                            {starterKit.is_saved ? "Saved" : "Save"}
+                        </button>
                         <a
                             href="/starter-kit"
-                            className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium"
+                            className="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                         >
-                            <ArrowLeft className="h-6 w-6 mr-2 mt-1" />
+                            <ArrowLeft className="h-5 w-5 mr-1" />
                             Back
                         </a>
                     </div>
@@ -73,7 +129,7 @@ export default function Show({ starterKit }: { starterKit: StarterKit }) {
                 {/* Steps */}
                 <div className="space-y-10">
                     {starterKit.steps.map((step) => (
-                        <Step key={step.order} step={step} />
+                        <StepBlock key={step.order} step={step} />
                     ))}
                 </div>
             </section>
@@ -91,7 +147,6 @@ function CopyButton({ text }: { text: string }) {
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
             console.error("Failed to copy:", err);
-            // Fallback for older browsers
             const textArea = document.createElement("textarea");
             textArea.value = text;
             document.body.appendChild(textArea);
@@ -129,7 +184,7 @@ function CopyButton({ text }: { text: string }) {
     );
 }
 
-function Step({ step }: { step: Step }) {
+function StepBlock({ step }: { step: Step }) {
     const [html, setHtml] = useState<string>("");
 
     useEffect(() => {
@@ -146,7 +201,6 @@ function Step({ step }: { step: Step }) {
 
     return (
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
-            {/* Text */}
             <div className="flex gap-6">
                 <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-slate-200 text-sm font-semibold text-slate-600">
                     {step.order}
@@ -159,12 +213,9 @@ function Step({ step }: { step: Step }) {
                 </div>
             </div>
 
-            {/* Code Block with Copy Button - ENHANCED */}
             <div className="relative min-w-0 rounded-xl bg-slate-900 p-6 text-sm shadow-lg">
                 <div className="mb-3 text-xs text-slate-400">Terminal</div>
-
                 <CopyButton text={step.command} />
-
                 {html ? (
                     <div
                         className="overflow-x-auto"

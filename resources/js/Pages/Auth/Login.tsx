@@ -1,4 +1,4 @@
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 
 export default function Login() {
@@ -15,17 +15,17 @@ export default function Login() {
 
     return (
         <>
-            <Head title="Admin Login" />
+            <Head title="Login" />
 
             <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
                 <div className="w-full max-w-md">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-100 px-8 py-10">
                         <div className="text-center mb-8">
                             <h1 className="text-2xl font-semibold text-gray-700 mb-2">
-                                Admin Login
+                                Welcome Back
                             </h1>
                             <p className="text-gray-500 text-sm">
-                                Sign in to manage your starter kits
+                                Sign in to your account
                             </p>
                         </div>
 
@@ -45,7 +45,7 @@ export default function Login() {
                                     onChange={(e) =>
                                         setData("email", e.target.value)
                                     }
-                                    placeholder="admin@example.com"
+                                    placeholder="you@example.com"
                                 />
                                 {errors.email && (
                                     <p className="mt-2 text-sm text-red-600">
@@ -104,12 +104,24 @@ export default function Login() {
                                 {processing ? "Signing in..." : "Sign in"}
                             </button>
                         </form>
+
+                        <div className="mt-6 text-center">
+                            <p className="text-sm text-gray-500">
+                                Don't have an account?{" "}
+                                <Link
+                                    href="/register"
+                                    className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
+                                >
+                                    Create one
+                                </Link>
+                            </p>
+                        </div>
                     </div>
 
                     <div className="text-center mt-6">
                         <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
                             <div className="w-2 h-2 bg-gray-800 rounded-full"></div>
-                            <span>Laravel Inertia React</span>
+                            <span>InitLy</span>
                         </div>
                     </div>
                 </div>

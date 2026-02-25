@@ -60,6 +60,13 @@ class StarterKit extends Model
         return $this->hasMany(StarterKitStep::class);
     }
 
+    public function SavedByUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            "saved_starter_kits",
+        )->withTimestamps();
+    }
     /* =============
     |  SCOPES
      ==============*/
