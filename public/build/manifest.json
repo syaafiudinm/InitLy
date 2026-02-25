@@ -1,17 +1,17 @@
 {
-  "_AdminLayout-CWqXm_kU.js": {
-    "file": "assets/AdminLayout-CWqXm_kU.js",
+  "_AdminLayout-B-Gy8z2g.js": {
+    "file": "assets/AdminLayout-B-Gy8z2g.js",
     "name": "AdminLayout",
     "imports": [
       "resources/js/app.tsx"
     ]
   },
-  "_MainLayout-CLDiFmOU.js": {
-    "file": "assets/MainLayout-CLDiFmOU.js",
+  "_MainLayout-Krz-mYdC.js": {
+    "file": "assets/MainLayout-Krz-mYdC.js",
     "name": "MainLayout",
     "imports": [
       "resources/js/app.tsx",
-      "_createLucideIcon-BynEmhEK.js"
+      "_createLucideIcon-By0rTRad.js"
     ]
   },
   "_angular-html-CU67Zn6k.js": {
@@ -22,15 +22,15 @@
       "node_modules/@shikijs/langs/dist/html.mjs"
     ]
   },
-  "_arrow-left-BTd6f5hT.js": {
-    "file": "assets/arrow-left-BTd6f5hT.js",
+  "_arrow-left-CVizdekm.js": {
+    "file": "assets/arrow-left-CVizdekm.js",
     "name": "arrow-left",
     "imports": [
-      "_createLucideIcon-BynEmhEK.js"
+      "_createLucideIcon-By0rTRad.js"
     ]
   },
-  "_createLucideIcon-BynEmhEK.js": {
-    "file": "assets/createLucideIcon-BynEmhEK.js",
+  "_createLucideIcon-By0rTRad.js": {
+    "file": "assets/createLucideIcon-By0rTRad.js",
     "name": "createLucideIcon",
     "imports": [
       "resources/js/app.tsx"
@@ -2237,7 +2237,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-BKTgl_TF.css",
+    "file": "assets/app-CcRHyZP8.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -2246,47 +2246,47 @@
     ]
   },
   "resources/js/Pages/Admin/StarterKits/Create.tsx": {
-    "file": "assets/Create-DiX4LUus.js",
+    "file": "assets/Create-B8y1S1QI.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/StarterKits/Create.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_AdminLayout-CWqXm_kU.js"
+      "_AdminLayout-B-Gy8z2g.js"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/Admin/StarterKits/Edit.tsx": {
-    "file": "assets/Edit-DZ3aBzmS.js",
+    "file": "assets/Edit-CEfDORX-.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/StarterKits/Edit.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_AdminLayout-CWqXm_kU.js"
+      "_AdminLayout-B-Gy8z2g.js"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/Admin/StarterKits/Index.tsx": {
-    "file": "assets/Index-BRpmf9WQ.js",
+    "file": "assets/Index-P7yV_9nJ.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/StarterKits/Index.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_AdminLayout-CWqXm_kU.js",
-      "_createLucideIcon-BynEmhEK.js"
+      "_AdminLayout-B-Gy8z2g.js",
+      "_createLucideIcon-By0rTRad.js"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/Auth/Login.tsx": {
-    "file": "assets/Login-Cip4b7QQ.js",
+    "file": "assets/Login-BB_sE-7U.js",
     "name": "Login",
     "src": "resources/js/Pages/Auth/Login.tsx",
     "isDynamicEntry": true,
@@ -2294,11 +2294,11 @@
       "resources/js/app.tsx"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/Auth/Register.tsx": {
-    "file": "assets/Register-C_MQZCgp.js",
+    "file": "assets/Register-DCKcae1H.js",
     "name": "Register",
     "src": "resources/js/Pages/Auth/Register.tsx",
     "isDynamicEntry": true,
@@ -2306,62 +2306,62 @@
       "resources/js/app.tsx"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/Auth/SavedKits.tsx": {
-    "file": "assets/SavedKits-CAAsNwvW.js",
+    "file": "assets/SavedKits-BGKDFye1.js",
     "name": "SavedKits",
     "src": "resources/js/Pages/Auth/SavedKits.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_MainLayout-CLDiFmOU.js",
-      "_arrow-left-BTd6f5hT.js",
-      "_createLucideIcon-BynEmhEK.js"
+      "_MainLayout-Krz-mYdC.js",
+      "_arrow-left-CVizdekm.js",
+      "_createLucideIcon-By0rTRad.js"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/Home.tsx": {
-    "file": "assets/Home-BA61M4pv.js",
+    "file": "assets/Home-Be-gmvmS.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_MainLayout-CLDiFmOU.js",
-      "_createLucideIcon-BynEmhEK.js"
+      "_MainLayout-Krz-mYdC.js",
+      "_createLucideIcon-By0rTRad.js"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/StarterKits/Index.tsx": {
-    "file": "assets/Index-Bw2zhNMp.js",
+    "file": "assets/Index-xpqB4bPd.js",
     "name": "Index",
     "src": "resources/js/Pages/StarterKits/Index.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_MainLayout-CLDiFmOU.js",
-      "_createLucideIcon-BynEmhEK.js"
+      "_MainLayout-Krz-mYdC.js",
+      "_createLucideIcon-By0rTRad.js"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/Pages/StarterKits/Show.tsx": {
-    "file": "assets/Show-Dls6OJi6.js",
+    "file": "assets/Show-DuV6iR7t.js",
     "name": "Show",
     "src": "resources/js/Pages/StarterKits/Show.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_MainLayout-CLDiFmOU.js",
-      "_arrow-left-BTd6f5hT.js",
-      "_createLucideIcon-BynEmhEK.js"
+      "_MainLayout-Krz-mYdC.js",
+      "_arrow-left-CVizdekm.js",
+      "_createLucideIcon-By0rTRad.js"
     ],
     "dynamicImports": [
       "node_modules/@shikijs/langs/dist/abap.mjs",
@@ -2663,11 +2663,11 @@
       "node_modules/shiki/dist/wasm.mjs"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-Bc5zk5HS.js",
+    "file": "assets/app-hp7FicB6.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -2683,7 +2683,7 @@
       "resources/js/Pages/StarterKits/Show.tsx"
     ],
     "css": [
-      "assets/app-BKTgl_TF.css"
+      "assets/app-CcRHyZP8.css"
     ]
   }
 }

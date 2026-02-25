@@ -1,4 +1,4 @@
-import{j as e,b as K,r as h,c as U,L as d}from"./app-Bc5zk5HS.js";import{c as q}from"./createLucideIcon-BynEmhEK.js";const X=[["path",{d:"M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z",key:"oz39mx"}]],H=q("bookmark",X);function Y({open:i,onClose:a}){return i?e.jsxs("div",{className:"fixed inset-0 z-50 flex items-center justify-center",children:[e.jsx("div",{className:"absolute inset-0 bg-black/40",onClick:a}),e.jsxs("div",{className:`
+import{j as e,b as K,r as h,c as U,L as d}from"./app-hp7FicB6.js";import{c as q}from"./createLucideIcon-By0rTRad.js";const X=[["path",{d:"M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z",key:"oz39mx"}]],H=q("bookmark",X);function Y({open:i,onClose:a}){return i?e.jsxs("div",{className:"fixed inset-0 z-50 flex items-center justify-center",children:[e.jsx("div",{className:"absolute inset-0 bg-black/40",onClick:a}),e.jsxs("div",{className:`
                     relative w-full max-w-sm
                     rounded-md bg-gray-50 p-6
                     border border-gray-800
