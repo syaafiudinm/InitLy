@@ -3,16 +3,12 @@ import { Link, router } from "@inertiajs/react";
 import { PageProps } from "@/types";
 import { usePage } from "@inertiajs/react";
 import { Bookmark } from "lucide-react";
+import LogoutConfirm from "./LogoutConfirm";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
+    const [openLogout, setOpenLogout] = useState(false);
     const { auth } = usePage<PageProps>().props;
-
-    const handleLogout = () => {
-        if (window.confirm("Are you sure you want to logout?")) {
-            router.post("/logout");
-        }
-    };
 
     return (
         <header className="sticky top-0 z-50 border-b border-slate-200 bg-gray-50">
@@ -74,15 +70,15 @@ export default function Navbar() {
                                     {auth.user.name} 👋
                                 </span>
                                 <button
-                                    onClick={handleLogout}
+                                    onClick={() => setOpenLogout(true)}
                                     className="
-                                        text-sm font-medium text-red-600
-                                        px-3 py-1.5 rounded-md
-                                        border border-transparent
-                                        transition-all duration-200
-                                        hover:border-red-600 hover:shadow-[2px_2px_0px] hover:shadow-red-600
-                                        active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
-                                    "
+                                    text-sm font-medium text-red-600
+                                    px-3 py-1.5 rounded-md
+                                    border border-transparent
+                                    transition-all duration-200
+                                    hover:border-red-600 hover:shadow-[2px_2px_0px] hover:shadow-red-600
+                                    active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
+                                  "
                                 >
                                     Logout
                                 </button>
@@ -198,16 +194,16 @@ export default function Navbar() {
                                             <button
                                                 onClick={() => {
                                                     setOpen(false);
-                                                    handleLogout();
+                                                    setOpenLogout(true);
                                                 }}
                                                 className="
-                                                    text-sm font-medium text-red-600
-                                                    px-3 py-1.5 rounded-md
-                                                    border border-transparent
-                                                    transition-all duration-200
-                                                    hover:border-red-600 hover:shadow-[2px_2px_0px] hover:shadow-red-600
-                                                    active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
-                                                "
+                                                text-sm font-medium text-red-600
+                                                px-3 py-1.5 rounded-md
+                                                border border-transparent
+                                                transition-all duration-200
+                                                hover:border-red-600 hover:shadow-[2px_2px_0px] hover:shadow-red-600
+                                                active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
+                                              "
                                             >
                                                 Logout
                                             </button>
@@ -252,6 +248,10 @@ export default function Navbar() {
                     </div>
                 )}
             </nav>
+            <LogoutConfirm
+                open={openLogout}
+                onClose={() => setOpenLogout(false)}
+            />
         </header>
     );
 }
