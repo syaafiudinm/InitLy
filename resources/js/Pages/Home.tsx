@@ -1,15 +1,17 @@
 import MainLayout from "@/Layouts/MainLayout";
 import { Head, Link } from "@inertiajs/react";
+import { useState } from "react";
+import UsageModal from "@/Components/UsageModal";
 
 export default function Home() {
+    const [showUsage, setShowUsage] = useState(false);
+
     return (
         <MainLayout>
             <Head title="InitLy - Quick Starter Kit Installer" />
 
-            {/* Hero Section */}
             <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto text-center">
-                    {/* Main Content */}
                     <div className="mb-8 sm:mb-12 lg:mb-16">
                         <h1 className="mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-800">
                             Welcome to{" "}
@@ -28,11 +30,57 @@ export default function Home() {
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4">
                             <Link
                                 href="/starter-kit"
-                                className="w-full sm:w-auto inline-flex items-center justify-center bg-gray-800 hover:bg-gray-900 text-white font-medium px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                className="
+                                    w-full sm:w-auto
+                                    inline-flex items-center justify-center gap-2
+                                    border border-gray-800
+                                    bg-gray-800
+                                    text-white
+                                    font-medium
+                                    px-6 sm:px-8 py-3 sm:py-4
+                                    rounded-lg
+                                    shadow-[3px_3px_0px] shadow-gray-500
+                                    transition-all duration-200
+                                    hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none hover:bg-gray-800
+                                    active:translate-x-0 active:translate-y-0 active:shadow-[3px_3px_0px] active:shadow-gray-500
+                                "
                             >
-                                <span className="mr-2">🚀</span>
+                                <span>🚀</span>
                                 Explore Starter Kits
                             </Link>
+
+                            {/* Usage Button — neobrutalism style */}
+                            <button
+                                onClick={() => setShowUsage(true)}
+                                className="
+                                    w-full sm:w-auto
+                                    inline-flex items-center justify-center gap-2
+                                    border border-gray-800
+                                    bg-white
+                                    text-gray-800
+                                    font-medium
+                                    px-6 sm:px-8 py-3 sm:py-4
+                                    rounded-lg
+                                    shadow-[3px_3px_0px] shadow-gray-800
+                                    transition-all duration-200
+                                    hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none
+                                    active:translate-x-0 active:translate-y-0 active:shadow-[3px_3px_0px] active:shadow-gray-800
+                                "
+                            >
+                                {/* Terminal icon */}
+                                <svg
+                                    stroke="currentColor"
+                                    fill="currentColor"
+                                    strokeWidth="0"
+                                    viewBox="0 0 256 256"
+                                    height="18"
+                                    width="18"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z" />
+                                </svg>
+                                How to use
+                            </button>
 
                             <div className="flex items-center text-sm text-gray-500">
                                 <span className="hidden sm:inline">
@@ -84,6 +132,11 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            <UsageModal
+                isOpen={showUsage}
+                onClose={() => setShowUsage(false)}
+            />
         </MainLayout>
     );
 }
