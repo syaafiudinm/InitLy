@@ -1,16 +1,17 @@
 {
-  "_AdminLayout-CIuViFYW.js": {
-    "file": "assets/AdminLayout-CIuViFYW.js",
+  "_AdminLayout-C3wlVuHX.js": {
+    "file": "assets/AdminLayout-C3wlVuHX.js",
     "name": "AdminLayout",
     "imports": [
       "resources/js/app.tsx"
     ]
   },
-  "_MainLayout-CnPr3SI1.js": {
-    "file": "assets/MainLayout-CnPr3SI1.js",
+  "_MainLayout-DsXtdfYj.js": {
+    "file": "assets/MainLayout-DsXtdfYj.js",
     "name": "MainLayout",
     "imports": [
-      "resources/js/app.tsx"
+      "resources/js/app.tsx",
+      "_createLucideIcon-Coc-d5tt.js"
     ]
   },
   "_angular-html-CU67Zn6k.js": {
@@ -21,8 +22,15 @@
       "node_modules/@shikijs/langs/dist/html.mjs"
     ]
   },
-  "_createLucideIcon-Sv5dFSY_.js": {
-    "file": "assets/createLucideIcon-Sv5dFSY_.js",
+  "_arrow-left-B27KpYYF.js": {
+    "file": "assets/arrow-left-B27KpYYF.js",
+    "name": "arrow-left",
+    "imports": [
+      "_createLucideIcon-Coc-d5tt.js"
+    ]
+  },
+  "_createLucideIcon-Coc-d5tt.js": {
+    "file": "assets/createLucideIcon-Coc-d5tt.js",
     "name": "createLucideIcon",
     "imports": [
       "resources/js/app.tsx"
@@ -2229,7 +2237,7 @@
     "isDynamicEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-_S6F4mlW.css",
+    "file": "assets/app-BEHLK-eS.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -2237,93 +2245,123 @@
       "app.css"
     ]
   },
-  "resources/js/Pages/Admin/Auth/Login.tsx": {
-    "file": "assets/Login-fr0RnocS.js",
-    "name": "Login",
-    "src": "resources/js/Pages/Admin/Auth/Login.tsx",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/app.tsx"
-    ],
-    "css": [
-      "assets/app-_S6F4mlW.css"
-    ]
-  },
   "resources/js/Pages/Admin/StarterKits/Create.tsx": {
-    "file": "assets/Create-CEyh7Xcg.js",
+    "file": "assets/Create-3ROCcE80.js",
     "name": "Create",
     "src": "resources/js/Pages/Admin/StarterKits/Create.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_AdminLayout-CIuViFYW.js"
+      "_AdminLayout-C3wlVuHX.js"
     ],
     "css": [
-      "assets/app-_S6F4mlW.css"
+      "assets/app-BEHLK-eS.css"
     ]
   },
   "resources/js/Pages/Admin/StarterKits/Edit.tsx": {
-    "file": "assets/Edit-Cegb7pMU.js",
+    "file": "assets/Edit-pl3zwwiC.js",
     "name": "Edit",
     "src": "resources/js/Pages/Admin/StarterKits/Edit.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_AdminLayout-CIuViFYW.js"
+      "_AdminLayout-C3wlVuHX.js"
     ],
     "css": [
-      "assets/app-_S6F4mlW.css"
+      "assets/app-BEHLK-eS.css"
     ]
   },
   "resources/js/Pages/Admin/StarterKits/Index.tsx": {
-    "file": "assets/Index-DIn4HXEQ.js",
+    "file": "assets/Index-Dp_O7MBp.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/StarterKits/Index.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_AdminLayout-CIuViFYW.js",
-      "_createLucideIcon-Sv5dFSY_.js"
+      "_AdminLayout-C3wlVuHX.js",
+      "_createLucideIcon-Coc-d5tt.js"
     ],
     "css": [
-      "assets/app-_S6F4mlW.css"
+      "assets/app-BEHLK-eS.css"
+    ]
+  },
+  "resources/js/Pages/Auth/Login.tsx": {
+    "file": "assets/Login-BglLWucf.js",
+    "name": "Login",
+    "src": "resources/js/Pages/Auth/Login.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx"
+    ],
+    "css": [
+      "assets/app-BEHLK-eS.css"
+    ]
+  },
+  "resources/js/Pages/Auth/Register.tsx": {
+    "file": "assets/Register-DU2maBAt.js",
+    "name": "Register",
+    "src": "resources/js/Pages/Auth/Register.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx"
+    ],
+    "css": [
+      "assets/app-BEHLK-eS.css"
+    ]
+  },
+  "resources/js/Pages/Auth/SavedKits.tsx": {
+    "file": "assets/SavedKits-DW8gVCav.js",
+    "name": "SavedKits",
+    "src": "resources/js/Pages/Auth/SavedKits.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_MainLayout-DsXtdfYj.js",
+      "_arrow-left-B27KpYYF.js",
+      "_createLucideIcon-Coc-d5tt.js"
+    ],
+    "css": [
+      "assets/app-BEHLK-eS.css"
     ]
   },
   "resources/js/Pages/Home.tsx": {
-    "file": "assets/Home-C9W5Nzam.js",
+    "file": "assets/Home-CjtoJ5Od.js",
     "name": "Home",
     "src": "resources/js/Pages/Home.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_MainLayout-CnPr3SI1.js"
+      "_MainLayout-DsXtdfYj.js",
+      "_createLucideIcon-Coc-d5tt.js"
     ],
     "css": [
-      "assets/app-_S6F4mlW.css"
+      "assets/app-BEHLK-eS.css"
     ]
   },
   "resources/js/Pages/StarterKits/Index.tsx": {
-    "file": "assets/Index-fMkdnYDz.js",
+    "file": "assets/Index-BcTkIUHc.js",
     "name": "Index",
     "src": "resources/js/Pages/StarterKits/Index.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_MainLayout-CnPr3SI1.js"
+      "_MainLayout-DsXtdfYj.js",
+      "_createLucideIcon-Coc-d5tt.js"
     ],
     "css": [
-      "assets/app-_S6F4mlW.css"
+      "assets/app-BEHLK-eS.css"
     ]
   },
   "resources/js/Pages/StarterKits/Show.tsx": {
-    "file": "assets/Show-DMWwcSgX.js",
+    "file": "assets/Show-IjwfczWQ.js",
     "name": "Show",
     "src": "resources/js/Pages/StarterKits/Show.tsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.tsx",
-      "_MainLayout-CnPr3SI1.js",
-      "_createLucideIcon-Sv5dFSY_.js"
+      "_MainLayout-DsXtdfYj.js",
+      "_arrow-left-B27KpYYF.js",
+      "_createLucideIcon-Coc-d5tt.js"
     ],
     "dynamicImports": [
       "node_modules/@shikijs/langs/dist/abap.mjs",
@@ -2625,25 +2663,27 @@
       "node_modules/shiki/dist/wasm.mjs"
     ],
     "css": [
-      "assets/app-_S6F4mlW.css"
+      "assets/app-BEHLK-eS.css"
     ]
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-C7FrBziR.js",
+    "file": "assets/app-CzwP0Vy-.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
     "dynamicImports": [
-      "resources/js/Pages/Admin/Auth/Login.tsx",
       "resources/js/Pages/Admin/StarterKits/Create.tsx",
       "resources/js/Pages/Admin/StarterKits/Edit.tsx",
       "resources/js/Pages/Admin/StarterKits/Index.tsx",
+      "resources/js/Pages/Auth/Login.tsx",
+      "resources/js/Pages/Auth/Register.tsx",
+      "resources/js/Pages/Auth/SavedKits.tsx",
       "resources/js/Pages/Home.tsx",
       "resources/js/Pages/StarterKits/Index.tsx",
       "resources/js/Pages/StarterKits/Show.tsx"
     ],
     "css": [
-      "assets/app-_S6F4mlW.css"
+      "assets/app-BEHLK-eS.css"
     ]
   }
 }
